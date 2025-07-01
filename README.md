@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+Problem Statement
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A non-profit organization has requested to build a software application that will help manage and optimize their volunteer activities. The application should help the organization efficiently allocate volunteers to different events and tasks based on their preferences, skills, and availability. The application should consider the following criteria:
 
-## Available Scripts
+Volunteer’s location
+Volunteer’s skills and preferences
+Volunteer’s availability
+Event requirements and location
+Task urgency and priority
 
-In the project directory, you can run:
 
-### `npm start`
+Assignment 2: Front End
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Front end must include the following components:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Login (Allow volunteers and administrators to register if not registered yet)
+User Registration (Initially only username (use email) and password)
+User Profile Management (After registration, users should log in first to complete their profile). Following fields will be on the profile page/form:
+Full Name (50 characters, required)
+Address 1 (100 characters, required)
+Address 2 (100 characters, optional)
+City (100 characters, required)
+State (Drop Down, selection required) DB will store 2-character state code
+Zip code (9 characters, at least 5-character code required)
+Skills (multi-select dropdown, required)
+Preferences (Text area, optional)
+Availability (Date picker, multiple dates allowed, required)
+Event Management Form (Administrators can create and manage events). The form should include:
+Event Name (100 characters, required)
+Event Description (Text area, required)
+Location (Text area, required)
+Required Skills (Multi-select dropdown, required)
+Urgency (Drop down, selection required)
+Event Date (Calendar, date picker)
+Volunteer Matching Form (A form where administrators can view and match volunteers to events based on their profiles and event requirements):
+Volunteer Name (Auto-fill from database)
+Matched Event (Auto-fill from database based on volunteer's profile)
+Notification System
+Display notifications for new event assignments, updates, and reminders
+Volunteer History
+Tabular display of all volunteer participation history. All fields from Event Management are displayed, along with volunteer’s participation status.
+You should have validations in place for required fields, field types, and field lengths.
+Submission Requirements
 
-### `npm test`
+Submit a Word/PDF document with your answers.
+Use GitHub for your group collaboration and code.
+Answer these questions:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+GitHub Repository Link (1 point)
+Provide the link to your GitHub repository for TAs to view the code.
+Design and Development Methodology (1 point)
+Discuss if your design and development methodology has changed since Assignment 1 and why.
+Front-End Technologies and Responsibilities (2 points)
+List what front-end technologies you are using and why. List who is responsible for doing what in your group.
+Screenshots of Your Front End (5 points)
+Provide screenshots of your front end, each page.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Getting Started
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Download Node.js
+Download and install from: https://nodejs.org
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Confirm it's working:
+node -v
+npm -v
 
-### `npm run eject`
+Open cmd and execute the following:
+1. npm install
+2. cd volunteer-app
+3. npm start
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+The server should start and page should appear automatically or open link manually ie. http://localhost:3000/ 
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
