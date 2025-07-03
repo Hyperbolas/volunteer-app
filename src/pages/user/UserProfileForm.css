@@ -1,13 +1,9 @@
-/* UserProfileForm.css */
-
 .container {
   max-width: 500px;
   margin: 40px auto;
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .heading {
@@ -35,17 +31,8 @@
   border-radius: 4px;
   border: 1px solid #ccc;
 }
-/* .select {
-  padding: 8px 10px; /* Reduced padding to match other inputs
-  font-size: 16px;
-  border-radius: 4px; /* Adjusted for consistency 
-  border: 1px solid #ddd;
-  background-color: #f9f9f9;
-  transition: all 0.3s ease;
-  min-height: auto; /* Removed the height restriction 
-} */
 
-/* Single-select style (used by State dropdown) */
+
 .select-single {
   padding: 8px 10px;
   font-size: 16px;
@@ -54,14 +41,13 @@
   background-color: #fff;
 }
 
-/* Multi-select style (used by Skills dropdown) */
 .select-multiple {
   padding: 8px 10px;
   font-size: 16px;
   border-radius: 4px;
   border: 1px solid #ccc;
   background-color: #fff;
-  height: 120px; /* Give space to show multiple items */
+  height: 120px; 
   overflow-y: auto;
 }
 
@@ -69,7 +55,6 @@
 .select:focus {
   border-color: #007bff;
   outline: none;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
 }
 
 .textarea {
@@ -93,10 +78,4 @@
 
 .button:hover {
   background-color: #0056b3;
-}
-
-.error-message {
-  color: red;
-  font-size: 14px;
-  margin-top: 4px;
 }
