@@ -6,7 +6,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
 
   return (
-    <>
+      <div className="admin-container">
       <AdminNavBar />
       <div className="admin-dashboard">
         <h1>Admin Dashboard</h1>
@@ -22,7 +22,7 @@ const AdminDashboard = () => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

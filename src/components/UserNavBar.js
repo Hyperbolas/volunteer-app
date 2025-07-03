@@ -14,12 +14,7 @@ const NavBar = () => {
     return (
     <nav>
         <Link to="/">Homepage</Link> <br></br>
-
-        {user?.role === "user" && (
-        <>
         <Link to="/user/UserDashboard">User Dashboard</Link> <br></br>
-        </>)}
-
 
         {/*Logout Button */}
         {user && (
