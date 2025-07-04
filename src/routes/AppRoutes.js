@@ -1,4 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
+// import NavBar from "../components/UserNavBar";
+
+//Pages
 import Homepage from '../pages/Homepage';
 import Login from '../pages/Login';
 import Register from '../pages/Registration';
@@ -15,11 +18,12 @@ import UserProfileForm from '../pages/user/UserProfileForm';
 
 const AppRoutes = () => {
     return (
+        <>
+        {/* <NavBar/> */}
         <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/registration" element={<Register/>} />
-            <Route path="/registration" element={<Register/>} />
+            <Route path="/registration" element={<Register/>} /> 
             <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
             <Route path="/admin/AdminEventManagement" element={<AdminEventManagement/>} />
             <Route path="/admin/VolunteerMatchingForm" element={<VolunteerMatchingForm/>} />
@@ -29,6 +33,7 @@ const AppRoutes = () => {
             <Route path="/user/UserMatchedEvents"  element={<UserMatchedEvents/>} />
             <Route path="/user/UserProfileForm" element={<UserProfileForm/>} />
         </Routes>
+        </> /*removed duplicate registration*/
     ); 
 
 

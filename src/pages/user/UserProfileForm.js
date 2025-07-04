@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./UserProfileForm.css"; // import the CSS file
 import DatePicker from "react-multi-date-picker";
+import UserNavBar from "../../components/UserNavBar";
 //referenced from chatgpt, https://www.npmjs.com/package/react-multi-date-picker for multi-date picker
 
 const UserProfileForm = () => {

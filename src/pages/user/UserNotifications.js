@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import UserNavBar from "../../components/UserNavBar";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
@@ -27,6 +28,8 @@ const Notifications = () => {
   }, []);
 
   return (
+    <div className='navigation-container'>
+    <UserNavBar/>
     <div style={{ padding: '40px', backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
       <h2>Notifications</h2>
 
@@ -51,6 +54,7 @@ const Notifications = () => {
           ))}
         </ul>
       )}
+    </div>
     </div>
   );
 };
