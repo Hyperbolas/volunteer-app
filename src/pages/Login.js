@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import './Login.css';
+import './Auth.css'; 
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -27,7 +27,6 @@ function Login() {
       (user) => user.email === email && user.password === password
     );
 
-    //temporary role logic, replace with real authentication in the backend
     if (matchedUser) {
       if (matchedUser.role === "admin") {
         navigate("/admin/AdminDashboard");
@@ -44,43 +43,35 @@ function Login() {
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
 
-        <div className="form-group">
-          <label>Email:
+        <label>Email:
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          </label>
-        </div>
-        
+        </label>
 
-        <div className="form-group">
-          <label>Password:
+        <label>Password:
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          </label>
-        </div>
+        </label>
 
         <button type="submit">Login</button>
       </form>
-      <div>
-        <br/> <br/>
-        For dev only: <br />
-        Admin             <br />
-        Email: admin@example.com <br />
-        Password: admin123
-        <br />
-        <br />
-        Volunteer <br />
-        Email: user@example.com <br />
-        Password: user123
 
+      <div style={{ marginTop: '20px', fontSize: '14px' }}>
+        <strong>For dev only:</strong><br />
+        <u>Admin</u><br />
+        Email: admin@example.com<br />
+        Password: admin123<br /><br />
+        <u>Volunteer</u><br />
+        Email: user@example.com<br />
+        Password: user123
       </div>
     </div>
   );
