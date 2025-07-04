@@ -1,11 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminNavBar from "../../components/AdminNavBar";
+//references chatgpt, https://www.w3schools.com/css/css_colors.asp
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
 
   return (
+
       <div className="admin-container">
       <AdminNavBar />
       <div className="admin-dashboard">
