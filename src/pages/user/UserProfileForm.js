@@ -354,7 +354,7 @@ const UserProfileForm = () => {
             <option value="cleaning">Cleaning</option>
             <option value="cooking">Cooking</option>
             <option value="communication">Communication</option>
-            <option value="eventSetUp">Event Set Up</option>
+            <option value="eventPlanning">Event Planning</option>
             <option value="teamwork">Teamwork</option>
             <option value="organization">Organization</option>
             <option value="leadership">Leadership</option>
@@ -402,7 +402,7 @@ const UserProfileForm = () => {
         </div>
 
         <button type="submit" className="button">
-          Save Profile
+          Update Profile/Availability
         </button>
         {/* when user clicks this, if they have no errors, then shows alert saying they are being redirected to dashboard*/}
       </form>

@@ -16,16 +16,52 @@ function VolunteerParticipationHistory() {
       volunteerName: "Volunteer B (name)",
       eventName: "Shelter Kitchen Shift",
       requiredSkills: ["Cooking", "Teamwork"],
-      date: "09-22-2025",
-      status: "Assigned",
+      date: "06-22-2025",
+      status: "Completed",
     },
     {
       volunteerName: "Volunteer C (name)",
       eventName: "Community Meeting",
-      requiredSkills: ["Communication"],
-      date: "01-11-2025",
+      requiredSkills: ["Communication","Event Planning"],
+      date: "07-09-2025",
       status: "Pending Acceptance",
     },
+    {
+      volunteerName: "Volunteer D (name)",
+      eventName: "Cleaning Shift",
+      requiredSkills: [ "Teamwork"],
+      date: "08-22-2025",
+      status: "Assigned",
+    },
+    {
+      volunteerName: "Volunteer E (name)",
+      eventName: "Clinic Shift",
+      requiredSkills: ["First Aid", "Communication"],
+      date: "09-07-2025",
+      status: "Assigned",
+    },
+    {
+      volunteerName: "Volunteer F (name)",
+      eventName: "Warehouse Cleaning",
+      requiredSkills: ["Cleaning", "Teamwork"],
+      date: "10-20-2025",
+      status: "Pending Acceptance",
+    },
+    {
+      volunteerName: "Volunteer G (name)",
+      eventName: "Shelter Kitchen Shift",
+      requiredSkills: ["Cooking", "Teamwork"],
+      date: "11-11-2025",
+      status: "Assigned",
+    },
+    {
+      volunteerName: "Volunteer H (name)",
+      eventName: "Management Meeting",
+      requiredSkills: ["Leadership", "Teamwork", "Organization"],
+      date: "11-17-2025",
+      status: "Assigned",
+    }
+    
   ];
 
   return (
