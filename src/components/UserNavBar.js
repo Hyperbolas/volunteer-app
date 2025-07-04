@@ -30,6 +30,11 @@ const NavBar = () => {
           <Link to="/registration" style={{ marginLeft: "1rem" }}>Register</Link>
         </>
       )}
+      {/*Logout Button */}
+        
+        <button onClick={handleLogout} style={{ marginLeft: "1rem" }}>
+          Logout
+        </button>
     </nav>
     );
 };

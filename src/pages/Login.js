@@ -69,6 +69,19 @@ function Login() {
 
         <button type="submit">Login</button>
       </form>
+      <div>
+        <br/> <br/>
+        For dev only: <br />
+        Admin             <br />
+        Email: admin@example.com <br />
+        Password: admin123
+        <br />
+        <br />
+        Volunteer <br />
+        Email: user@example.com <br />
+        Password: user123
+
+      </div>
     </div>
   );
 }
