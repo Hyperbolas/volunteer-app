@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import AdminNavBar from "../../components/AdminNavBar";
-import DatePicker from "react-datepicker";
+import DatePicker from "react-multi-date-picker"
 import "./AdminEventManagement.css"
 
 const AdminEventManagement = ({ onSubmit }) => {
@@ -11,15 +11,25 @@ const AdminEventManagement = ({ onSubmit }) => {
       location: "",
       skills: [],
       urgency: "",
-      date: "",
+      date: [],
     });
 
-    const [eventDate, setEventDate] = useState(new Date());
+    // const [eventDate, setEventDate] = useState(new Date());
 
     const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...formData, [name]: value });
-    };
+    const { name, value, type, options} = e.target;
+    if (type === "select-multiple") {
+      const selectedOptions = [];
+      for (let i = 0; i < options.length; i++) {
+        if (options[i].selected) {
+          selectedOptions.push(options[i].value);
+        }
+      }
+      setForm({ ...formData, [name]: value });
+    }else {
+      setForm({ ...formData, [name]: value });
+    }
+  };
 
     const handleSubmit = (e) => {
     e.preventDefault();
@@ -97,11 +107,12 @@ const AdminEventManagement = ({ onSubmit }) => {
 
           {/* Skills Multi-select Drop Down, req */}
           <div className="form-group">
-            <label>Required Skills
+            <label>Required Skills</label>
               <select multiple
                 id="skills"
                 name="skills"
                 className="form-control"
+                value={formData.skills}
                 onChange={handleChange}
                 required
               > 
@@ -110,7 +121,6 @@ const AdminEventManagement = ({ onSubmit }) => {
                 <option value="Html">Html</option>
                 <option value="React">React</option>
                 </select>
-            </label>
           </div>
 
           {/*Urgency Drop down, req */}
@@ -132,21 +142,20 @@ const AdminEventManagement = ({ onSubmit }) => {
 
           {/*Event Date, Calendar, date picker */}
           <div className="form-group">
-            <label>Event Date
+            <label>Event Date</label>
               <DatePicker
-                selected={eventDate}
-                onChange={(date) => {
-                  setEventDate(date);
-                  setForm({...formData,date});
-                }}
-                dateFormat={"MM-DD-YYYY"}
-                className="form-control"
-                inputClass="input" 
-                calendarPosition="bottom-left"
-                placeholder="Select availability dates"
-                required
-              />
-            </label>
+              multiple
+              value={formData.date}
+              onChange={(dates) => {
+                setForm({ ...formData, date: dates });
+              }}
+              format="YYYY-MM-DD"
+              inputClass="form-control" 
+              className="blue" 
+              calendarPosition="bottom-left"
+              placeholder="Select availability dates"
+            />
+
           </div>
 
      <button type="submit" className="button">Submit</button>
