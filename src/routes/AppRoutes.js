@@ -36,6 +36,5 @@ const AppRoutes = () => {
         </> /*removed duplicate registration*/
     ); 
 
-
 };
 export default AppRoutes
