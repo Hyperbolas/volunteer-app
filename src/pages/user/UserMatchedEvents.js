@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import UserNavBar from "../../components/UserNavBar";
 
 const UserMatchedEvents = () => {
   const [matchedEvents, setMatchedEvents] = useState([]);
@@ -28,6 +29,8 @@ const UserMatchedEvents = () => {
   }, []);
 
   return (
+    <div className='navigation-container'>
+    <UserNavBar/>
     <div style={{ padding: '40px', backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
       <h2>Your Matched Events</h2>
 
@@ -59,6 +62,7 @@ const UserMatchedEvents = () => {
           </tbody>
         </table>
       )}
+    </div>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import "./VolunteerParticipationHistory.css";
 //references chatgpt, https://www.youtube.com/watch?v=SurVt_rqOQM
 
 import React from "react";
+import AdminNavBar from "../../components/AdminNavBar";
 
 function VolunteerParticipationHistory() {
   const sampleParticipationData = [
@@ -94,5 +95,6 @@ function VolunteerParticipationHistory() {
     </div>
   );
 }
+
 
 export default VolunteerParticipationHistory;

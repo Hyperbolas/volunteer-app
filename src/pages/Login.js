@@ -1,37 +1,89 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import './login.css'
+import './Login.css';
 
 function Login() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const navigate = useNavigate()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        console.log('Logged in', username, password);
+  const fakeUsers = [
+    {
+      email: "admin@example.com",
+      password: "admin123",
+      role: "admin"
+    },
+    {
+      email: "user@example.com",
+      password: "user123",
+      role: "user"
     }
+  ];
 
-return(
-    
-    <div className='login-container'>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const matchedUser = fakeUsers.find(
+      (user) => user.email === email && user.password === password
+    );
+
+    //temporary role logic, replace with real authentication in the backend
+    if (matchedUser) {
+      if (matchedUser.role === "admin") {
+        navigate("/admin/AdminDashboard");
+      } else {
+        navigate("/user/UserDashboard");
+      }
+    } else {
+      alert("Invalid email or password");
+    }
+  };
+
+  return (
+    <div className="login-container">
+      <form className="login-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
-        <form onSubmit={handleSubmit}>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username"></input>
-            <label for="password">Password:</label>
-            <input type="text"></input>
-        </form>
-        {/* Temporary login buttons for flow testing, will be replaced by a 
-        single login button when implemented */}
-      <br />
-      <button onClick={() => navigate('/user/UserDashboard')}>
-        Volunteer Login
-      </button>
-      <button onClick={() => navigate('/admin/AdminDashboard')}>
-        Admin Login
-      </button>
+
+        <div className="form-group">
+          <label>Email:
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          </label>
+        </div>
+        
+
+        <div className="form-group">
+          <label>Password:
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          </label>
+        </div>
+
+        <button type="submit">Login</button>
+      </form>
+      <div>
+        <br/> <br/>
+        For dev only: <br />
+        Admin             <br />
+        Email: admin@example.com <br />
+        Password: admin123
+        <br />
+        <br />
+        Volunteer <br />
+        Email: user@example.com <br />
+        Password: user123
+
+      </div>
     </div>
-);
+  );
 }
+
 export default Login;
