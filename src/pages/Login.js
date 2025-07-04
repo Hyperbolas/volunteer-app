@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import './login.css'
+import './Auth.css'
 
 function Login() {
     const [username, setUsername] = useState('');
@@ -14,7 +14,7 @@ function Login() {
 
 return(
     
-    <div className='login-container'>
+  <div className='auth-container'>
         <h2>Login</h2>
         <form onSubmit={handleSubmit}>
             <label for="username">Username:</label>
@@ -24,14 +24,15 @@ return(
         </form>
         {/* Temporary login buttons for flow testing, will be replaced by a 
         single login button when implemented */}
-      <br />
-      <button onClick={() => navigate('/user/UserDashboard')}>
-        Volunteer Login
-      </button>
-      <button onClick={() => navigate('/admin/AdminDashboard')}>
-        Admin Login
-      </button>
-    </div>
+      <div style={{ marginTop: '20px', display: 'flex', gap: '12px' }}>
+          <button onClick={() => navigate('/user/UserDashboard')}>
+            Volunteer Login
+          </button>
+          <button onClick={() => navigate('/admin/AdminDashboard')}>
+            Admin Login
+          </button>
+        </div>
+        </div>
 );
 }
 export default Login;

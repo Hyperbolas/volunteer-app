@@ -1,15 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import './UserDashboard.css';
+//references chatgpt, https://www.w3schools.com/css/css_padding.asp
 
 const VolunteerDashboard = () => {
   const navigate = useNavigate();
 
   return (
-    <div style={{ padding: "40px", backgroundColor: "#f9f9f9", minHeight: "100vh" }}>
-      <h1>Volunteer Dashboard</h1>
+    <div className="dashboard-container">
+      <h1 className="dashboard-heading">Volunteer Dashboard</h1>
       <p>Welcome, Volunteer!</p>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "15px", marginTop: "30px", maxWidth: "300px" }}>
+      <div className="dashboard-buttons">
         <button onClick={() => navigate("/user/UserMatchedEvents")}>
           View Matched Events
         </button>
