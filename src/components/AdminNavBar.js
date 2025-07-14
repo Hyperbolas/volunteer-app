@@ -1,33 +1,27 @@
 import React from "react";
 import {Link, useNavigate} from "react-router-dom"
+import './NavBar.css'
 
 const NavBar = () => {
     const navigate = useNavigate();
-
-    const user = JSON.parse(localStorage.getItem("registeredUser"));
-
     const handleLogout = () => {
         localStorage.removeItem("registeredUser");
         navigate("/login");
     };
 
     return (
-    <nav>
-        <Link to="/">Homepage</Link> <br></br>
-
-        {/*User type Navigation*/}
-        
-        <Link to="/admin/AdminDashboard">Admin Dashboard</Link> <br></br>
-        
-
-        {/*Logout Button */}
-        
-        <button onClick={handleLogout} style={{ marginLeft: "1rem" }}>
-          Logout
-        </button>
-    
-
-    </nav>
+        <nav className="navbar">
+            <div className="nav-left">
+                <Link to="/">Homepage</Link>
+                <Link to="/admin/AdminDashboard">Admin Dashboard</Link>
+            </div>
+            
+            <div className="nav-right">
+                <button onClick={handleLogout} className="logout-button">
+                  Logout
+                </button>
+            </div>
+        </nav>
     );
 };
 

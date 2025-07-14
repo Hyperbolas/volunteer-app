@@ -66,6 +66,8 @@ function VolunteerParticipationHistory() {
   ];
 
   return (
+    <div>
+      <AdminNavBar/>
     <div className="history-container">
       <h2 className="history-heading">Volunteer Participation History</h2>
       <table className="history-table">
@@ -92,6 +94,7 @@ function VolunteerParticipationHistory() {
           {/* using map to loop through each object in the array*/}
         </tbody>
       </table>
+    </div>
     </div>
   );
 }

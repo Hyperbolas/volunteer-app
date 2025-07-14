@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./UserProfileForm.css";
 import DatePicker from "react-multi-date-picker";
+import UserNavBar from "../../components/UserNavBar";
 
 import { useNavigate } from "react-router-dom";
 //references chatgpt, https://www.npmjs.com/package/react-multi-date-picker for multi-date picker, https://www.youtube.com/watch?v=zCgruoRUxlk
@@ -202,6 +203,8 @@ const UserProfileForm = () => {
   } //using the alert to tell user that form is submitted successfully and then redirecting to the user dashboard.
 
   return (
+    <div>
+      <UserNavBar/>
     <div className="container">
       <h2 className="heading">User Profile Form</h2>
 
@@ -407,6 +410,7 @@ const UserProfileForm = () => {
         </button>
         {/* when user clicks this, if they have no errors, then shows alert saying they are being redirected to dashboard*/}
       </form>
+    </div>
     </div>
   );
 };
