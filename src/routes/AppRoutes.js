@@ -6,7 +6,8 @@ import Homepage from '../pages/Homepage';
 import Login from '../pages/Login';
 import Register from '../pages/Registration';
 import AdminDashboard from '../pages/admin/AdminDashboard';
-import AdminEventManagement from '../pages/admin/AdminEventManagement';
+import AdminCreateEvent from '../pages/admin/AdminCreateEvent';
+import AdminViewEvents from '../pages/admin/AdminViewEvents';
 import VolunteerMatchingForm from '../pages/admin/VolunteerMatchingForm';
 import VolunteerParticipationHistory from '../pages/admin/VolunteerParticipationHistory';
 import UserDashboard from '../pages/user/UserDashboard';
@@ -17,6 +18,9 @@ import UserProfileForm from '../pages/user/UserProfileForm';
 
 
 const AppRoutes = () => {
+    const handleSubmit = (formData) => {
+        console.log("Submitted event data:", formData);
+    };
     return (
         <>
         {/* <NavBar/> */}
@@ -25,7 +29,8 @@ const AppRoutes = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/registration" element={<Register/>} /> 
             <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
-            <Route path="/admin/AdminEventManagement" element={<AdminEventManagement/>} />
+            <Route path="/admin/AdminViewEvents" element={<AdminViewEvents/>} />
+            <Route path="/admin/AdminCreateEvent" element={<AdminCreateEvent onSubmit={handleSubmit}/>} />
             <Route path="/admin/VolunteerMatchingForm" element={<VolunteerMatchingForm/>} />
             <Route path="/admin/VolunteerParticipationHistory" element={<VolunteerParticipationHistory/>} />
             <Route path="/user/UserDashboard" element={<UserDashboard/>} />  
