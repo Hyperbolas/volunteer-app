@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AdminNavBar from "../../components/AdminNavBar";
+import "./VolunteerMatchingForm.css"
 
 const VolunteerMatchingForm = () => {
   const [volunteers, setVolunteers] = useState([]);
@@ -57,9 +58,9 @@ const VolunteerMatchingForm = () => {
   return (
     <div className="admin-container">
       <AdminNavBar />
-      <div style={{ padding: '30px', maxWidth: '500px', margin: 'auto' }}>
-        <h2>Volunteer Matching Form</h2>
-        <form onSubmit={handleSubmit}>
+      <div className='form-wrapper'>
+        <h2 className='form-title'>Volunteer Matching Form</h2>
+        <form onSubmit={handleSubmit} className='matching-form'>
           <label>Select Volunteer:</label>
           <select value={selectedVolunteer} onChange={handleVolunteerSelect} required>
             <option value="">-- Choose Volunteer --</option>
@@ -70,7 +71,7 @@ const VolunteerMatchingForm = () => {
             ))}
           </select>
 
-          <br /><br />
+          <br></br>
 
           <label>Select Matching Event:</label>
           <select
@@ -87,9 +88,8 @@ const VolunteerMatchingForm = () => {
             ))}
           </select>
 
-          <br /><br />
           <button type="submit">Assign Volunteer</button>
-          {message && <p style={{ color: 'green', marginTop: '10px' }}>{message}</p>}
+          {message && <p className='success-message'>{message}</p>}
         </form>
       </div>
     </div>

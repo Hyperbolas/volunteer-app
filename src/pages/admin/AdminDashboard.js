@@ -9,9 +9,9 @@ const AdminDashboard = () => {
       <div className="admin-container">
       <AdminNavBar />
       <div className="admin-dashboard">
-        <h1>Admin Dashboard</h1>
-        <div className="button-group">
-          <button onClick={() => navigate('/admin/AdminEventManagement')}>
+        <h1 className="admin-heading">Admin Dashboard</h1>
+        <div className="admin-button-group">
+          <button onClick={() => navigate('/admin/AdminViewEvents')}>
             Manage Events
           </button>
           <button onClick={() => navigate('/admin/VolunteerMatchingForm')}>
