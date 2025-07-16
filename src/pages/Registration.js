@@ -1,31 +1,38 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import './Auth.css'
-//references chatgpt, https://www.w3schools.com/css/css_dimension.asp
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase"; // adjust path if needed
+import './Auth.css';
 
 const Register = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("volunteer");
-  const [isRegistered, setIsRegistered] = useState(false); // NEW state
+  const [isRegistered, setIsRegistered] = useState(false);
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
-    const user = { email, password, role };
-    localStorage.setItem("registeredUser", JSON.stringify(user));
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
 
-    alert("Registered successfully! You can now log in.");
-    setIsRegistered(true); // show first time login button
+      // Store role locally since no DB
+      localStorage.setItem("userRole", role);
+
+      alert("Registered successfully! You can now log in.");
+      setIsRegistered(true);
+    } catch (error) {
+      alert("Registration failed: " + error.message);
+    }
   };
 
   const handleFirstLogin = () => {
-    const user = JSON.parse(localStorage.getItem("registeredUser"));
-    if (user.role=="admin"){
-      navigate("/admin/AdminDashboard")
+    const storedRole = localStorage.getItem("userRole");
+    if (storedRole === "admin") {
+      navigate("/admin/AdminDashboard");
     } else {
-    navigate("/user/UserProfileForm");
+      navigate("/user/UserProfileForm");
     }
   };
 
@@ -67,7 +74,6 @@ const Register = () => {
         <button type="submit">Register</button>
       </form>
 
-      {/* first time login button appears only when registration is successful */}
       {isRegistered && (
         <>
           <br />

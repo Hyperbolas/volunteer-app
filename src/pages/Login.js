@@ -1,40 +1,28 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import './Auth.css'; 
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase"; // Adjust path if needed
+import './Auth.css';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const fakeUsers = [
-    {
-      email: "admin@example.com",
-      password: "admin123",
-      role: "admin"
-    },
-    {
-      email: "user@example.com",
-      password: "user123",
-      role: "user"
-    }
-  ];
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const matchedUser = fakeUsers.find(
-      (user) => user.email === email && user.password === password
-    );
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
 
-    if (matchedUser) {
-      if (matchedUser.role === "admin") {
+      // TEMP: Determine role based on email (no DB yet)
+      if (email === "admin@example.com") {
         navigate("/admin/AdminDashboard");
       } else {
         navigate("/user/UserDashboard");
       }
-    } else {
-      alert("Invalid email or password");
+    } catch (error) {
+      alert("Login failed: " + error.message);
     }
   };
 
