@@ -15,6 +15,20 @@ const AdminEventManagement = ({ onSubmit }) => {
     });
 
     const navigate = useNavigate();
+    const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.eventName.trim()) newErrors.eventName = "Event name is required";
+    if (!formData.description.trim()) newErrors.description = "Description is required";
+    if (!formData.location.trim()) newErrors.location = "Location is required";
+    if (formData.skills.length === 0) newErrors.skills = "Select at least one skill";
+    if (!formData.urgency) newErrors.urgency = "Urgency is required";
+    if (!formData.date || formData.date.length === 0) newErrors.date = "Please select at least one date";
+
+    return newErrors;
+  };
 
     // const [eventDate, setEventDate] = useState(new Date());
 
@@ -35,30 +49,25 @@ const AdminEventManagement = ({ onSubmit }) => {
 
     const handleSubmit = (e) => {
       e.preventDefault();
-      if (
-        formData.eventName && 
-        formData.description && 
-        formData.location &&
-        formData.skills.length > 0 && 
-        formData.urgency && 
-        formData.date
-      ){
-        onSubmit(formData);
-        setForm({
-          eventName: "", 
-          description: "", 
-          location: "",
-          skills: [], 
-          urgency: "", 
-          date: ""
-        });
-        navigate("/admin/AdminViewEvents"); 
-        alert("Thank you for your submission, redirecting to Event Viewer")
-      } else {
-        alert("Please fill in all required fields.");
+      const validationErrors = validateForm();
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        return;
       }
-
+      onSubmit(formData);
+      setForm({
+        eventName: "", 
+        description: "", 
+        location: "",
+        skills: [], 
+        urgency: "", 
+        date: ""
+      });
+      setErrors({});
+      navigate("/admin/AdminViewEvents"); 
+      alert("Thank you for your submission, redirecting to Event Viewer")
     };
+
   return (
     <div>
       <AdminNavBar />
@@ -70,39 +79,42 @@ const AdminEventManagement = ({ onSubmit }) => {
         {/*Event Name 100 Chars, req*/}
         <form className="event-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Event Name</label>
+            <label>Event Name*</label>
             <input
               id="eventName"
               name="eventName"
               className= "form-control"
+              value={formData.eventName}
               onChange={handleChange}
               maxLength={100}
-              required
               />
+              {errors.eventName && <p className="error">{errors.eventName}</p>}
           </div>
 
           {/* Description Text Area, req */}
           <div className="form-group">
-            <label>Description</label>
+            <label>Description*</label>
               <input
               id= "description"
               name="description"
               className="form-control"
+              value={formData.description}
               onChange={handleChange}
-              required
               />
+              {errors.description && <p className="error">{errors.description}</p>}
           </div>
 
           {/* Location Text Area, req */}
           <div className="form-group">
-            <label>Location</label>
+            <label>Location*</label>
               <input
               id="location"
               name="location"
               className="form-control"
+              value={formData.location}
               onChange={handleChange}
-              required
               />
+              {errors.location && <p className="error">{errors.location}</p>}
           </div>
 
           {/* Skills Multi-select Drop Down, req */}
@@ -114,34 +126,36 @@ const AdminEventManagement = ({ onSubmit }) => {
                 className="form-control"
                 value={formData.skills}
                 onChange={handleChange}
-                required
               >
                 <option value="JavaScript">Cleaning</option>
                 <option value="CSS">Marketing</option>
                 <option value="Html">Teaching</option>
                 <option value="React">Office Administration</option>
                 </select>
+                {errors.skills && <p className="error">{errors.skills}</p>}
           </div>
 
           {/*Urgency Drop down, req */}
           <div className="form-group">
-            <label>Urgency </label>
+            <label>Urgency*</label>
               <select
                 id="urgency"
                 name="urgency"
                 className="form-control"
+                value={formData.urgency}
                 onChange={handleChange}
-                required
               >
+                <option value=""disabled hidden>Select Urgency</option>
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
                 <option value="High">High</option>
               </select>
+              {errors.urgency && <p className="error">{errors.urgency}</p>}
           </div>
 
           {/*Event Date, Calendar, date picker */}
           <div className="form-group">
-            <label>Event Date</label>
+            <label>Event Date*</label>
               <DatePicker
               multiple
               value={formData.date}
@@ -154,7 +168,7 @@ const AdminEventManagement = ({ onSubmit }) => {
               calendarPosition="bottom-left"
               placeholder="Select availability dates"
             />
-
+            {errors.date && <p className="error">{errors.date}</p>}
           </div>
     <button type="submit" className="button">Submit</button>
       

@@ -37,6 +37,12 @@
   flex-direction: column;
 }
 
+.error {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
 .form-group label {
   font-weight: 500;
   color: #333;
