@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import './Auth.css'
+//references chatgpt, https://www.w3schools.com/css/css_dimension.asp
 
 const Register = () => {
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ const Register = () => {
   };
 
   return (
-    <div>
+    <div className='auth-container'>
       <h2>Register</h2>
       <form onSubmit={handleRegister}>
         <label>

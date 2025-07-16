@@ -60,6 +60,8 @@ const AdminEventManagement = ({ onSubmit }) => {
 
     };
   return (
+    <div>
+      <AdminNavBar />
     <div className="admin-event-page">
       <div className="admin-container">
       <main className="form-wrapper">
@@ -160,7 +162,7 @@ const AdminEventManagement = ({ onSubmit }) => {
     </main>
     </div>
     </div>
-    // </div>
+    </div>
 
   );
   };

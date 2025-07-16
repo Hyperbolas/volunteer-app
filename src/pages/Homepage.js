@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import './HomePage.css';
+//references ChatGPT, https://www.w3schools.com/css/default.asp
 
 const HomePage = () => {
   const navigate = useNavigate();
