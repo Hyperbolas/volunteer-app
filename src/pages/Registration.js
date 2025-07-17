@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase"; // adjust path if needed
 import './Auth.css';
+//references chatgpt, old https://www.w3schools.com/css/css_dimension.asp
 
 const Register = () => {
   const navigate = useNavigate();
@@ -11,25 +10,35 @@ const Register = () => {
   const [role, setRole] = useState("volunteer");
   const [isRegistered, setIsRegistered] = useState(false);
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
+const handleRegister = async (e) => {
+  e.preventDefault();
 
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
+  try {
+    const response = await fetch("http://localhost:5000/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password, role })
+    });
 
-      // Store role locally since no DB
-      localStorage.setItem("userRole", role);
+    const data = await response.json();
 
+    if (response.ok) {
       alert("Registered successfully! You can now log in.");
       setIsRegistered(true);
-    } catch (error) {
-      alert("Registration failed: " + error.message);
+    } else {
+      alert(data.error || "Registration failed.");
     }
-  };
+  } catch (error) {
+    alert("Something went wrong. Please try again.");
+    console.error("Registration error:", error);
+  }
+};
+
 
   const handleFirstLogin = () => {
-    const storedRole = localStorage.getItem("userRole");
-    if (storedRole === "admin") {
+    if (role === "admin") {
       navigate("/admin/AdminDashboard");
     } else {
       navigate("/user/UserProfileForm");

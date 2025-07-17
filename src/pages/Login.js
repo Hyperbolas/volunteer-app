@@ -1,28 +1,38 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase"; // Adjust path if needed
-import './Auth.css';
+import "./Auth.css";
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const response = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      // TEMP: Determine role based on email (no DB yet)
-      if (email === "admin@example.com") {
-        navigate("/admin/AdminDashboard");
+      const data = await response.json();
+
+      if (response.ok) {
+        if (data.role === "admin") {
+          navigate("/admin/AdminDashboard");
+        } else {
+          navigate("/user/UserDashboard");
+        }
       } else {
-        navigate("/user/UserDashboard");
+        alert(data.error || "Login failed.");
       }
     } catch (error) {
-      alert("Login failed: " + error.message);
+      alert("Something went wrong. Please try again.");
+      console.error("Login error:", error);
     }
   };
 
@@ -31,7 +41,8 @@ function Login() {
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
 
-        <label>Email:
+        <label>
+          Email:
           <input
             type="email"
             value={email}
@@ -40,7 +51,8 @@ function Login() {
           />
         </label>
 
-        <label>Password:
+        <label>
+          Password:
           <input
             type="password"
             value={password}
@@ -51,16 +63,6 @@ function Login() {
 
         <button type="submit">Login</button>
       </form>
-
-      <div style={{ marginTop: '20px', fontSize: '14px' }}>
-        <strong>For dev only:</strong><br />
-        <u>Admin</u><br />
-        Email: admin@example.com<br />
-        Password: admin123<br /><br />
-        <u>Volunteer</u><br />
-        Email: user@example.com<br />
-        Password: user123
-      </div>
     </div>
   );
 }
