@@ -1,14 +1,24 @@
-//references: chatgpt, https://medium.com/@ibrahimhz/creating-your-first-backend-with-node-js-step-by-step-guide-892769af4cb0
+const express = require("express");
+const cors = require("cors");
 
-
-const express = require('express');
 const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Connect auth routes
+const authRoutes = require("./routes/auth");
+app.use("/api", authRoutes);
+
+app.get("/", (req, res) => {
+  res.send("Backend server is running");
+});
+
 const PORT = 5000;
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
 
-app.get('/', (req, res) => {
-  res.send('Backend works!');
-});
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+module.exports = app;
