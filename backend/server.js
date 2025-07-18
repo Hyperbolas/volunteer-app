@@ -9,6 +9,9 @@ app.use(express.json());
 const authRoutes = require("./routes/auth");
 app.use("/api", authRoutes);
 
+const notificationRoutes = require("./routes/notification");
+app.use("/api", notificationRoutes);
+
 app.get("/", (req, res) => {
   res.send("Backend server is running");
 });
