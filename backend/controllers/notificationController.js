@@ -5,23 +5,27 @@ function sendNotification(req, res) {
   const { userEmail, message } = req.body;
 
   if (!userEmail || !message) {
-    return res.status(400).json({ error: 'User email and message are required' });
+    return res
+      .status(400)
+      .json({ error: "User email and message are required" });
   }
 
   // Add the notification to the list
   notifications.push({ userEmail, message });
 
-  res.status(200).json({ message: 'Notification sent successfully' });
+  res.status(200).json({ message: "Notification sent successfully" });
 }
 
 function getNotifications(req, res) {
   const { email } = req.query;
 
   if (!email) {
-    return res.status(400).json({ error: 'Email is required to fetch notifications' });
+    return res
+      .status(400)
+      .json({ error: "Email is required to fetch notifications" });
   }
 
-  const userNotifications = notifications.filter(n => n.userEmail === email);
+  const userNotifications = notifications.filter((n) => n.userEmail === email);
 
   res.status(200).json(userNotifications);
 }
@@ -38,11 +42,10 @@ function sendReminderNotification(req, res) {
   res.status(200).json({ message: "Reminder notification sent" });
 }
 
-
 module.exports = {
   sendNotification,
   getNotifications,
   sendAssignmentNotification,
   sendUpdateNotification,
-  sendReminderNotification
+  sendReminderNotification,
 };
