@@ -5,8 +5,13 @@ const app = express();
 app.use(cors()); 
 app.use(express.json());
 
+//Admin View and Create Events 
 const eventRoutes = require('./routes/eventRoute');
 app.use('/api/eventRoute', eventRoutes); 
+
+//Volunteer matching Algo
+const matchRoutes = require('./routes/matchRoute');
+app.use('/api/matches', matchRoutes);
 
 const PORT = 5000;
 if (require.main === module) {

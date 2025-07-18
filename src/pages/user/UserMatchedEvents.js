@@ -4,29 +4,33 @@ import UserNavBar from "../../components/UserNavBar";
 const UserMatchedEvents = () => {
   const [matchedEvents, setMatchedEvents] = useState([]);
 
-  // Simulated fetch - replace with API call later
   useEffect(() => {
-    const dummyEvents = [
-      {
-        id: 1,
-        name: "Community Park Cleanup",
-        date: "2025-07-10",
-        location: "Lincoln Park",
-        skills: ["Teamwork", "Cleaning"],
-        status: "Confirmed",
-      },
-      {
-        id: 2,
-        name: "Food Distribution",
-        date: "2025-07-12",
-        location: "Downtown Food Bank",
-        skills: ["Organization", "Communication"],
-        status: "Pending",
-      },
-    ];
+  fetch('http://localhost:5000/api/matches/test-matches')
+    .then((res) => res.json())
+    .then((data) => {setMatchedEvents(data[0]?.matches || []);})
+    .catch((err) => console.error('Error fetching matches:', err));
+}, []);
 
-    setMatchedEvents(dummyEvents);
-  }, []);
+
+  const handleAttendanceChange = async (eventId, newStatus) => {
+    try {
+      const response = await fetch('/api/matchRoute/${eventId}/status', {
+      method: 'PATCH',
+      headers: {'Content-Type': 'application.json'},
+      body: JSON.stringify({ status: newStatus}),
+    });
+
+    if (!response.ok) throw new Error('Failed to update status');
+
+    const matchedEvents = matchedEvents.map((event) =>
+      event.id === eventId ? {...event, status: newStatus} : event);
+
+    setMatchedEvents(matchedEvents);
+
+    } catch(error) {
+      console.error('Error updating status', error)
+    }
+  };
 
   return (
     <div className='navigation-container'>
@@ -41,7 +45,7 @@ const UserMatchedEvents = () => {
           <thead>
             <tr style={{ backgroundColor: '#ddd' }}>
               <th style={{ padding: '10px', border: '1px solid #ccc' }}>Event Name</th>
-              <th style={{ padding: '10px', border: '1px solid #ccc' }}>Date</th>
+              <th style={{ padding: '10px', border: '1px solid #ccc' }}>Dates</th>
               <th style={{ padding: '10px', border: '1px solid #ccc' }}>Location</th>
               <th style={{ padding: '10px', border: '1px solid #ccc' }}>Skills</th>
               <th style={{ padding: '10px', border: '1px solid #ccc' }}>Status</th>
@@ -50,13 +54,20 @@ const UserMatchedEvents = () => {
           <tbody>
             {matchedEvents.map((event) => (
               <tr key={event.id}>
-                <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.name}</td>
-                <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.date}</td>
+                <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.eventName}</td>
+                <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.date.join(", ")}</td>
                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.location}</td>
-                <td style={{ padding: '10px', border: '1px solid #ccc' }}>
-                  {event.skills.join(", ")}
+                <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.skills.join(", ")}</td>
+                <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.status}
+                  <select
+                  value = {event.UserStatus}
+                  onChange={(e) => handleAttendanceChange(event.id,e.target.value)}
+                  >
+                    <option value="">Select</option>
+                    <option value={"attending"}>Attending</option>
+                    <option value={"attended"}>Attended</option>
+                  </select>
                 </td>
-                <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.status}</td>
               </tr>
             ))}
           </tbody>
