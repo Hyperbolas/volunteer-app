@@ -67,3 +67,10 @@
 .history-table th {
   font-weight: bold;
 }
+
+.status-box select {
+  width: 108%;
+  padding: 4px;
+  font-size: 12px;
+}
+
