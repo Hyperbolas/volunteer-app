@@ -1,7 +1,6 @@
 import "./VolunteerParticipationHistory.css";
 import React, { useEffect, useState } from "react";
 import AdminNavBar from "../../components/AdminNavBar";
-import { useEffect, useState } from "react";
 
 function VolunteerParticipationHistory() {
   const [histories, setHistories] = useState([]);
