@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router(); // ✅ Declare router first
+const router = express.Router();
 
 const { getVolunteerHistory } = require("../controllers/volunteerHistoryController");
 router.get("/history/:userId", getVolunteerHistory);

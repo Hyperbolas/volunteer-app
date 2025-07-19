@@ -1,16 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const ctrl = require("../controllers/userProfileController");
-const dataStore = require("../storage/dataStore");
 
-// get
-router.get("/profile/:id", (req, res) =>
-  ctrl.getUserProfile(req, res, dataStore)
-);
+const {
+  getUserProfile,
+  updateUserProfile,
+} = require("../controllers/userProfileController");
 
-// post
-router.post("/profile/:id", (req, res) =>
-  ctrl.updateUserProfile(req, res, dataStore)
-);
+router.get("/profile/:id", getUserProfile);
+router.put("/profile/:id", updateUserProfile);
 
 module.exports = router;

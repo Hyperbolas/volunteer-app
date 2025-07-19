@@ -162,6 +162,9 @@ const UserProfileForm = () => {
     setErrors(updatedErrors);
   }
 
+  /*
+  original validate function
+  
   function validate() {
     const newErrors = {
       fullName: "",
@@ -218,32 +221,42 @@ const UserProfileForm = () => {
     return isValid;
     //then checks if there are any errors in the newErrors object. If there are, it returns false, otherwise it returns true. so example if one of the fields is not empty we get false so form is not submitted unless no errors.
   }
+  */
+
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!validate()) return;
   
-    fetch(`http://localhost:5000/api/profile/1`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    fetch("http://localhost:5000/api/profile/1", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(formData),
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to save profile");
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Saved:", data);
-        alert("Profile saved. Redirecting to dashboard.");
+      .then(async (res) => {
+        const data = await res.json();
+  
+        if (!res.ok) {
+          // Show all backend errors as alert
+          if (data.errors) {
+            const messages = Object.values(data.errors).join("\n");
+            alert("Validation Errors:\n" + messages);
+          } else {
+            alert(data.message || "Unknown error");
+          }
+          return;
+        }
+  
+        alert("Profile saved successfully");
         navigate("/user/UserDashboard");
       })
       .catch((err) => {
-        console.error(err);
-        alert("Error saving profile.");
+        console.error("Submission failed:", err);
+        alert("Something went wrong. Please try again.");
       });
   }
-   //using the alert to tell user that form is submitted successfully and then redirecting to the user dashboard.
-
+  
   return (
     <div>
       <UserNavBar/>
