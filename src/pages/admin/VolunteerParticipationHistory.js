@@ -8,7 +8,7 @@ function VolunteerParticipationHistory() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/history/any") 
+    fetch("http://localhost:5000/api/history/1") 
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch history");
         return res.json();
