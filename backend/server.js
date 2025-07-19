@@ -12,8 +12,8 @@ app.use("/api", authRoutes);
 const notificationRoutes = require("./routes/notification");
 app.use("/api", notificationRoutes);
 
-const eventRoutes = require('./routes/eventRoute');
-app.use('/api/eventRoute', eventRoutes); 
+//const eventRoutes = require('./routes/eventRoute');
+//app.use('/api/eventRoute', eventRoutes); 
 
 const historyRoutes = require("./routes/volunteerHistory");
 app.use("/api", historyRoutes);
