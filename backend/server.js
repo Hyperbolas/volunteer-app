@@ -12,6 +12,16 @@ app.use("/api", authRoutes);
 const notificationRoutes = require("./routes/notification");
 app.use("/api", notificationRoutes);
 
+const eventRoutes = require('./routes/eventRoute');
+app.use('/api/eventRoute', eventRoutes); 
+
+const historyRoutes = require("./routes/volunteerHistory");
+app.use("/api", historyRoutes);
+
+const userProfileRoutes = require('./routes/userProfile'); 
+app.use('/api', userProfileRoutes);
+
+
 app.get("/", (req, res) => {
   res.send("Backend server is running");
 });
