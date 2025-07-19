@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./UserProfileForm.css";
 import DatePicker from "react-multi-date-picker";
 import UserNavBar from "../../components/UserNavBar";
@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 //references chatgpt, https://www.npmjs.com/package/react-multi-date-picker for multi-date picker, https://www.youtube.com/watch?v=zCgruoRUxlk
 
 const UserProfileForm = () => {
+  const userId = "1"; // default ID
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     fullName: "",
     address1: "",
@@ -32,6 +34,33 @@ const UserProfileForm = () => {
   }); //errors holds error message for each field. Set to empty initially aka no errors
 
   const navigate = useNavigate(); //helps redirect after submitting
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/profile/${userId}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Not found");
+        return res.json();
+      })
+      .then((data) => {
+        setFormData({
+          fullName: data.fullName || "",
+          address1: data.address1 || "",
+          address2: data.address2 || "",
+          city: data.city || "",
+          state: data.state || "",
+          zipCode: data.zipCode || "",
+          skills: data.skills || [],
+          preferences: data.preferences || "",
+          availability: data.availability || [],
+        });
+      })
+      .catch(() => {
+        // New user: leave form blank
+        console.log("No profile found for user, blank form loaded.");
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
+
 
   function handleChange(e) {
     const name = e.target.name;
@@ -133,6 +162,9 @@ const UserProfileForm = () => {
     setErrors(updatedErrors);
   }
 
+  /*
+  original validate function
+  
   function validate() {
     const newErrors = {
       fullName: "",
@@ -189,19 +221,42 @@ const UserProfileForm = () => {
     return isValid;
     //then checks if there are any errors in the newErrors object. If there are, it returns false, otherwise it returns true. so example if one of the fields is not empty we get false so form is not submitted unless no errors.
   }
+  */
+
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!validate()) {
-      return;
-    }
-    console.log("Profile saved:", formData);
-    alert(
-      "Thank you for your submission. You are being redirected to the dashboard."
-    );
-    navigate("/user/UserDashboard");
-  } //using the alert to tell user that form is submitted successfully and then redirecting to the user dashboard.
-
+  
+    fetch("http://localhost:5000/api/profile/1", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+  
+        if (!res.ok) {
+          // Show all backend errors as alert
+          if (data.errors) {
+            const messages = Object.values(data.errors).join("\n");
+            alert("Validation Errors:\n" + messages);
+          } else {
+            alert(data.message || "Unknown error");
+          }
+          return;
+        }
+  
+        alert("Profile saved successfully");
+        navigate("/user/UserDashboard");
+      })
+      .catch((err) => {
+        console.error("Submission failed:", err);
+        alert("Something went wrong. Please try again.");
+      });
+  }
+  
   return (
     <div>
       <UserNavBar/>

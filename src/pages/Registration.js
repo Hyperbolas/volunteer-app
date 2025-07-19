@@ -1,31 +1,47 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import './Auth.css'
-//references chatgpt, https://www.w3schools.com/css/css_dimension.asp
+import './Auth.css';
+//references chatgpt, old https://www.w3schools.com/css/css_dimension.asp
 
 const Register = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("volunteer");
-  const [isRegistered, setIsRegistered] = useState(false); // NEW state
+  const [isRegistered, setIsRegistered] = useState(false);
 
-  const handleRegister = (e) => {
-    e.preventDefault();
+const handleRegister = async (e) => {
+  e.preventDefault();
 
-    const user = { email, password, role };
-    localStorage.setItem("registeredUser", JSON.stringify(user));
+  try {
+    const response = await fetch("http://localhost:5000/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password, role })
+    });
 
-    alert("Registered successfully! You can now log in.");
-    setIsRegistered(true); // show first time login button
-  };
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("Registered successfully! You can now log in.");
+      setIsRegistered(true);
+    } else {
+      alert(data.error || "Registration failed.");
+    }
+  } catch (error) {
+    alert("Something went wrong. Please try again.");
+    console.error("Registration error:", error);
+  }
+};
+
 
   const handleFirstLogin = () => {
-    const user = JSON.parse(localStorage.getItem("registeredUser"));
-    if (user.role=="admin"){
-      navigate("/admin/AdminDashboard")
+    if (role === "admin") {
+      navigate("/admin/AdminDashboard");
     } else {
-    navigate("/user/UserProfileForm");
+      navigate("/user/UserProfileForm");
     }
   };
 
@@ -67,7 +83,6 @@ const Register = () => {
         <button type="submit">Register</button>
       </form>
 
-      {/* first time login button appears only when registration is successful */}
       {isRegistered && (
         <>
           <br />
