@@ -221,15 +221,28 @@ const UserProfileForm = () => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!validate()) {
-      return;
-    }
-    console.log("Profile saved:", formData);
-    alert(
-      "Thank you for your submission. You are being redirected to the dashboard."
-    );
-    navigate("/user/UserDashboard");
-  } //using the alert to tell user that form is submitted successfully and then redirecting to the user dashboard.
+    if (!validate()) return;
+  
+    fetch(`http://localhost:5000/api/profile/1`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to save profile");
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Saved:", data);
+        alert("Profile saved. Redirecting to dashboard.");
+        navigate("/user/UserDashboard");
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Error saving profile.");
+      });
+  }
+   //using the alert to tell user that form is submitted successfully and then redirecting to the user dashboard.
 
   return (
     <div>
