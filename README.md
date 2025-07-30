@@ -93,7 +93,7 @@ Back end must include the following components/modules:
 - Notification Module: Logic to send notifications to volunteers for event assignments, updates, and reminders.
 - Volunteer History Module: Track and display volunteer participation history.
   
-# Important Deliverables
+## Important Deliverables
 - Validations: Ensure validations are in place for required fields, field types, and field lengths in the backend code.
 
 - Unit Tests: All backend code should be covered by unit tests. Code coverage should be greater than 80%. Research how to run the code coverage reports. Each IDE has plugins to generate reports. Here are a few pointers: Stackify Code Coverage ToolsLinks to an external site.
@@ -104,7 +104,7 @@ Back end must include the following components/modules:
 
 ---
 
-##Assignment 4: Database Implementation
+## Assignment 4: Database Implementation
 
 You can use RDBMS or NoSQL database.
 
@@ -116,7 +116,7 @@ Database must include the following tables/documents:
 - VolunteerHistory: Tracks volunteer participation in events.
 - States: Stores state codes and names (if required).
   
-# Important Deliverables
+## Important Deliverables
 - Validations: Ensure validations are in place for required fields, field types, and field lengths.
 - Data Retrieval and Display: Backend should retrieve data from the database and display it to the front end.
 - Data Persistence: Form data should be populated from the backend. The backend should receive data from the front end, validate it, and persist it to the database.
