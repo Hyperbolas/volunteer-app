@@ -3,6 +3,7 @@
 ## Getting Started
 
 ## Docker Instructions
+Install docker from https://www.docker.com/
 Docker will setup frontend+backend+database
 
 <pre>
