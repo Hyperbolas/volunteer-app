@@ -1,6 +1,33 @@
 # Volunteer App
 
-Getting Started
+## Getting Started
+
+## Docker Instructions
+Install docker from https://www.docker.com/
+Docker will setup frontend+backend+database
+
+<pre>
+  # 1. Copy the example enviroment file 
+  cp .env.example .env.docker
+</pre>
+<pre>
+  # 2. Change the username and password in .env.docker to your own
+  POSTGRES_USER
+  POSTGRES_PASSWORD
+  PGUSER, PGPASSWORD — chnage to same creds as above if you want
+</pre>
+<pre>
+  # 3. Start the app 
+  docker-compose --env-file .env.docker up --build
+
+  # 4. Navigate to web app
+  http://localhost:3000/
+</pre>
+
+----
+For just Front end and backend, do the following: 
+
+## React Start
 
 Download Node.js and install from: https://nodejs.org
 
@@ -9,12 +36,20 @@ Confirm it's working:
 'npm -v'
 
 Open cmd and execute the following:
-
-1. npm install
-2. cd volunteer-app
-3. npm start
+<pre>
+  npm install
+  cd frontend
+  npm start
+</pre>
 
 - The server should start and page should appear automatically or open link manually ie. http://localhost:3000/
+## Nodejs Start 
+<pre> 
+  cd backend
+  npm run dev
+</pre>
+
+
 
 ---
 
@@ -71,6 +106,15 @@ Front end must include the following components:
 
 Back end must include the following components/modules:
 
+<<<<<<< HEAD
+=======
+---
+
+## Assignment 3: Back-End
+
+Back end must include the following components/modules:
+
+>>>>>>> f7e51a28d1bc13ea7f085d0d51afd563717c45e5
 - Login Module: Handle user authentication, registration, and login functionality.
 - User Profile Management Module: Manage user profile data, including location, skills, preferences, and availability.
 - Event Management Module: Create and manage events, including required skills, location, urgency, and event details.
@@ -78,7 +122,11 @@ Back end must include the following components/modules:
 - Notification Module: Logic to send notifications to volunteers for event assignments, updates, and reminders.
 - Volunteer History Module: Track and display volunteer participation history.
   
+<<<<<<< HEAD
 # Important Deliverables
+=======
+## Important Deliverables
+>>>>>>> f7e51a28d1bc13ea7f085d0d51afd563717c45e5
 - Validations: Ensure validations are in place for required fields, field types, and field lengths in the backend code.
 
 - Unit Tests: All backend code should be covered by unit tests. Code coverage should be greater than 80%. Research how to run the code coverage reports. Each IDE has plugins to generate reports. Here are a few pointers: Stackify Code Coverage ToolsLinks to an external site.

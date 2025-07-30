@@ -51,6 +51,6 @@ function VolunteerParticipationHistory() {
       </div>
     </div>
   );
-}
+};
 
 export default VolunteerParticipationHistory;

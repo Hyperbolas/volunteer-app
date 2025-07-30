@@ -13,7 +13,7 @@ const AdminDashboard = () => {
       <div className="admin-dashboard">
         <h1 className="admin-heading">Admin Dashboard</h1>
         <div className="admin-button-group">
-          <button onClick={() => navigate('/admin/AdminEventManagement')}>
+          <button onClick={() => navigate('/admin/AdminViewEvents')}>
             Manage Events
           </button>
           <button onClick={() => navigate('/admin/VolunteerMatchingForm')}>

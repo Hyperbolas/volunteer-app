@@ -21,6 +21,14 @@ app.use("/api", historyRoutes);
 const userProfileRoutes = require('./routes/userProfile'); 
 app.use('/api', userProfileRoutes);
 
+//Admin View and Create Events 
+const eventRoutes = require('./routes/eventRoute');
+app.use('/api/eventRoute', eventRoutes); 
+
+//Volunteer matching Algo
+const matchRoutes = require('./routes/matchRoute');
+app.use('/api/matches', matchRoutes);
+
 
 app.get("/", (req, res) => {
   res.send("Backend server is running");
@@ -32,6 +40,5 @@ if (require.main === module) {
     console.log(`Server running on http://localhost:${PORT}`);
   });
 }
-
 
 module.exports = app;
