@@ -5,6 +5,9 @@ services:
     build: ./frontend
     ports:
       - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     depends_on:
       - backend
 
@@ -12,6 +15,9 @@ services:
     build: ./backend
     ports:
       - "5000:5000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     env_file:
       .env.docker
     depends_on:
@@ -22,10 +28,21 @@ services:
     restart: always
     env_file:
       .env.docker
-    volumes: #for persistent data
-      - db_data:/var/lib/postgresql/data 
+    volumes:
+      - ./database/db_init.sql:/docker-entrypoint-initdb.d/db_init.sql:ro
     ports:
       - "5432:5432"
+      
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    restart: always
+    env_file:
+      .env.docker
+    ports:
+      - "5050:80"  # pgAdmin is accessible at localhost:5050
+    depends_on:
+      - db
 
 volumes:
   db_data:
