@@ -10,28 +10,32 @@ CREATE TABLE IF NOT EXISTS UserProfile (
   id SERIAL PRIMARY KEY,
   user_id INT REFERENCES UserCredentials(id) ON DELETE CASCADE,
   full_name TEXT,
-  location TEXT,
+  address TEXT,
+  city TEXT,
+  state TEXT,
+  zipcode TEXT,
   skills TEXT[],
   preferences TEXT[],
   availability TIMESTAMP[]
 );
 
-/* Events */
-CREATE TABLE IF NOT EXISTS Events (
+/* EventDetails */
+CREATE TABLE IF NOT EXISTS EventDetails (
   id SERIAL PRIMARY KEY,
-  eventName TEXT,
+  eventname TEXT,
   description TEXT,
   location TEXT,
-  required_skills TEXT[],
+  skills TEXT[],
   urgency TEXT,
-  event_date TIMESTAMP[],
+  date TEXT[],
+  status TEXT
 );
 
 /* UserEvents */
 CREATE TABLE IF NOT EXISTS UserEvents (
   id SERIAL PRIMARY KEY,
   user_id INT REFERENCES UserCredentials(id),
-  event_id INT REFERENCES Events(id),
+  event_id INT REFERENCES EventDetails(id),
   status TEXT
 );
 
@@ -39,8 +43,8 @@ CREATE TABLE IF NOT EXISTS UserEvents (
 CREATE TABLE IF NOT EXISTS VolunteerHistory (
     id SERIAL PRIMARY KEY,
     volunteerName TEXT,
-    eventName TEXT
-    requiredSkills TEXT[]
-    date TIMESTAMP[],
+    eventname TEXT,
+    requiredSkills TEXT[],
+    date TEXT[],
     status TEXT
 );

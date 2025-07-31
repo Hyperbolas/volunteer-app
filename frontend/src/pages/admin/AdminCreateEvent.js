@@ -6,7 +6,7 @@ import "./AdminCreateEvent.css"
 
 const AdminEventManagement = ( {onSubmit} ) => {
   const [formData, setForm] = useState({
-      eventName: "",
+      eventname: "",
       description: "",
       location: "",
       skills: [],
@@ -20,7 +20,7 @@ const AdminEventManagement = ( {onSubmit} ) => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.eventName.trim()) newErrors.eventName = "Event name is required";
+    if (!formData.eventname.trim()) newErrors.eventname = "Event name is required";
     if (!formData.description.trim()) newErrors.description = "Description is required";
     if (!formData.location.trim()) newErrors.location = "Location is required";
     if (formData.skills.length === 0) newErrors.skills = "Select at least one skill";
@@ -95,15 +95,15 @@ const AdminEventManagement = ( {onSubmit} ) => {
             <div className="form-group">
               <label>Event Name*</label>
               <input
-                id="eventName"
-                name="eventName"
+                id="eventname"
+                name="eventname"
                 className= "form-control"
-                value={formData.eventName}
+                value={formData.eventname}
                 onChange={handleChange}
                 maxLength={100}
                 type="text"
                 />
-                {errors.eventName && <p className="error">{errors.eventName}</p>}
+                {errors.eventname && <p className="error">{errors.eventname}</p>}
             </div>
 
             {/* Description Text Area, req */}
@@ -144,14 +144,14 @@ const AdminEventManagement = ( {onSubmit} ) => {
                   value={formData.skills}
                   onChange={handleChange}
                 >
-                  <option value="cleaning">Cleaning</option>
-                  <option value="cooking">Cooking</option>
-                  <option value="communication">Communication</option>
-                  <option value="eventPlanning">Event Planning</option>
-                  <option value="teamwork">Teamwork</option>
-                  <option value="organization">Organization</option>
-                  <option value="leadership">Leadership</option>
-                  <option value="firstAid">First Aid</option>
+                  <option value="Cleaning">Cleaning</option>
+                  <option value="Cooking">Cooking</option>
+                  <option value="Communication">Communication</option>
+                  <option value="Event Planning">Event Planning</option>
+                  <option value="Teamwork">Teamwork</option>
+                  <option value="Organization">Organization</option>
+                  <option value="Leadership">Leadership</option>
+                  <option value="First Aid">First Aid</option>
                   </select>
                   {errors.skills && <p className="error">{errors.skills}</p>}
             </div>

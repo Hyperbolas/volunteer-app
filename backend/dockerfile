@@ -5,4 +5,4 @@ RUN npm install
 COPY . .
 EXPOSE 5000
 
-CMD ["node", "nodemon", "server.js"]
+CMD ["node", "server.js"]
