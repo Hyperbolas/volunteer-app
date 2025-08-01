@@ -1,8 +1,14 @@
+jest.mock("../database/db", () => ({
+  query: jest.fn(),
+}));
+
+const db = require("../database/db");
+
 const {
   getEvents,
   createEvent,
-  getParticipationHistory
-} = require('../controllers/eventController');
+  getParticipationHistory,
+} = require("../controllers/eventController");
 
 // Create mock req/res objects for testing
 const mockResponse = () => {
@@ -12,13 +18,20 @@ const mockResponse = () => {
   return res;
 };
 
-describe('Event Controller Tests', () => {
-  describe('getEvents', () => {
-    it('should return all events', () => {
+describe("Event Controller Tests", () => {
+  describe("getEvents", () => {
+    it("should return all events", async () => {
+      // Mock DB query response for events
+      const fakeEvents = [
+        { id: 1, eventName: "Event 1" },
+        { id: 2, eventName: "Event 2" },
+      ];
+      db.query.mockResolvedValue({ rows: fakeEvents });
+
       const req = {};
       const res = mockResponse();
 
-      getEvents(req, res);
+      await getEvents(req, res);
 
       expect(res.json).toHaveBeenCalled();
       const result = res.json.mock.calls[0][0];
@@ -27,55 +40,69 @@ describe('Event Controller Tests', () => {
     });
   });
 
-  describe('createEvent', () => {
-    it('should return 400 if fields are missing', () => {
+  describe("createEvent", () => {
+    it("should return 400 if fields are missing", async () => {
       const req = {
         body: {
-          eventName: 'New Event',
-          // Missing fields
-        }
+          eventName: "New Event",
+          // Missing fields intentionally
+        },
       };
       const res = mockResponse();
 
-      createEvent(req, res);
+      await createEvent(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ error: 'All fields are required.' });
+      expect(res.json).toHaveBeenCalledWith({
+        error: "All fields are required.",
+      });
     });
 
-    it('should create a new event if all fields are provided', () => {
-      const req = {
-        body: {
-          eventName: 'Volunteer Fair',
-          description: 'Local fair for volunteers',
-          location: 'City Hall',
-          skills: ['Coordination'],
-          urgency: 'Medium',
-          date: '2025-08-10'
-        }
+    it("should create a new event if all fields are provided", async () => {
+      const newEvent = {
+        eventName: "Volunteer Fair",
+        description: "Local fair for volunteers",
+        location: "City Hall",
+        skills: ["Coordination"],
+        urgency: "Medium",
+        date: "2025-08-10",
       };
+
+      // Mock DB insert to return created event with id
+      db.query.mockResolvedValue({
+        rows: [{ id: 123, ...newEvent }],
+      });
+
+      const req = { body: newEvent };
       const res = mockResponse();
 
-      createEvent(req, res);
+      await createEvent(req, res);
 
       expect(res.status).toHaveBeenCalledWith(201);
       const createdEvent = res.json.mock.calls[0][0];
-      expect(createdEvent).toMatchObject(req.body);
-      expect(createdEvent).toHaveProperty('id');
+      expect(createdEvent).toMatchObject(newEvent);
+      expect(createdEvent).toHaveProperty("id");
     });
   });
 
-  describe('getParticipationHistory', () => {
-    it('should return all participation data', () => {
+  describe("getParticipationHistory", () => {
+    it("should return all participation data", async () => {
+      // Mock DB query response for participation
+      const fakeParticipation = [
+        { volunteerName: "Alice", eventName: "Event 1" },
+        { volunteerName: "Bob", eventName: "Event 2" },
+      ];
+      db.query.mockResolvedValue({ rows: fakeParticipation });
+
       const req = {};
       const res = mockResponse();
 
-      getParticipationHistory(req, res);
+      await getParticipationHistory(req, res);
 
       expect(res.json).toHaveBeenCalled();
       const result = res.json.mock.calls[0][0];
       expect(Array.isArray(result)).toBe(true);
-      expect(result[0]).toHaveProperty('volunteerName');
+      expect(result[0]).toHaveProperty("volunteerName");
     });
   });
 });
