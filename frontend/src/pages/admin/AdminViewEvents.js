@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import AdminNavBar from "../../components/AdminNavBar";
 import { useNavigate } from 'react-router-dom';
 import "./AdminViewEvents.css"
+const BASE_URL = 'http://localhost:5000/api/eventRoute';
 
 const ViewEvents = () => {
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/eventRoute')
+    fetch(BASE_URL)
       .then((res) => res.json())
       .then((data) => setEvents(data))
       .catch((err) => console.error('Error fetching events:', err));
@@ -17,25 +18,23 @@ const ViewEvents = () => {
 
 const handleStatus = async (eventId, newStatus) => {
   try {
-    const response = await fetch('/api/eventRoute/${eventId}/status', {
+    const response = await fetch(`${BASE_URL}/${eventId}/status`, {
     method: 'PATCH',
-    headers: {'Content-Type': 'application.json'},
+    headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({ status: newStatus}),
-  });
+    });
 
-  if (!response.ok) throw new Error('Failed to update status');
+    if (!response.ok) throw new Error('Failed to update status');
 
-  const updatedEvents = events.map((event) =>
-    event.id === eventId ? {...event, status: newStatus} : event);
+    const updatedEvents = events.map((event) =>
+      event.id === eventId ? {...event, status: newStatus} : event);
 
-  setEvents(updatedEvents);
+    setEvents(updatedEvents);
 
-  } catch(error) {
-    console.error('Error updating status', error)
-  }
-};
-
-
+    } catch(error) {
+      console.error('Error updating status', error)
+    }
+  };
 
   return (
     <div>
@@ -61,7 +60,7 @@ const handleStatus = async (eventId, newStatus) => {
           <tbody>
             {events.map((event) => (
               <tr key={event.id}>
-                <td> {event.eventName} </td>
+                <td> {event.eventname} </td>
                 <td>{event.description}</td>
                 <td> {event.location} </td>
                 <td> {event.skills.join(", ")} </td>
@@ -69,11 +68,13 @@ const handleStatus = async (eventId, newStatus) => {
                 <td> {event.date} </td>
                 <td className="status-box"> {event.status}
                 <select
-                value = {event.status}
-                onChange={(e) => handleStatus(event.id,e.target.value)}
+                  value = {event.status || ''}
+                  onChange={(e) => handleStatus(event.id,e.target.value)}
                 >
-                  <option value={"open"}>Open</option>
-                  <option value={"closed"}>Closed</option>
+                  <option value="">Select</option>
+                  <option value={"Pending"}>Pending</option>
+                  <option value={"Active"}>Active</option>
+                  <option value={"Completed"}>Completed</option>
                 </select>
                 </td>
               </tr> 

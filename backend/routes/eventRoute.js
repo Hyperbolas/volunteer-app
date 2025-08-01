@@ -4,14 +4,11 @@ const router = express.Router();
 const {
   getEvents,
   createEvent,
-  getParticipationHistory
+  updateEventStatus
 } = require('../controllers/eventController');
 
 router.get('/', getEvents);
 router.post('/', createEvent);
-router.get('/participation', getParticipationHistory);
+router.patch('/:id/status', updateEventStatus);
 
 module.exports = router;
-
-
-
