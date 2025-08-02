@@ -1,38 +1,21 @@
-// sample data
-const sampleParticipationData = [
-  {
-    volunteerId: "1",
-    volunteerName: "Alice Bobby",
-    eventName: "Warehouse Cleaning",
-    requiredSkills: ["Cleaning"],
-    date: "05-10-2025",
-    status: "Completed",
-  },
-  {
-    volunteerId: "1",
-    volunteerName: "Alice Bobby",
-    eventName: "Shelter Kitchen Shift",
-    requiredSkills: ["Cooking", "Teamwork"],
-    date: "06-22-2025",
-    status: "Completed",
-  },
-  {
-    volunteerId: "2",
-    volunteerName: "Bobby Lobby",
-    eventName: "Community Meeting",
-    requiredSkills: ["Communication", "Event Planning"],
-    date: "07-09-2025",
-    status: "Pending Acceptance",
+const db = require('../database/db');
+
+// GET /api/volunteer-history
+exports.getAllVolunteerHistories = async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT 
+        vh.eventname,
+        vh.requiredskills,
+        vh.date,
+        vh.status,
+        up.full_name AS volunteername
+      FROM VolunteerHistory vh
+      JOIN UserProfile up ON vh.volunteer_id = up.id
+    `);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("Error fetching volunteer history:", err);
+    res.status(500).json({ error: "Server error" });
   }
-];
-
-exports.getVolunteerHistory = (req, res) => {
-  const userId = req.params.userId;
-  const userHistory = sampleParticipationData.filter(item => item.volunteerId === userId);
-
-  if (userHistory.length === 0) {
-    return res.status(404).json({ message: "No history found for user" });
-  }
-
-  res.json(userHistory);
 };
