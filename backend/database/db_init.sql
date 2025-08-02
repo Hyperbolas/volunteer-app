@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS UserProfile (
   state TEXT,
   zipcode TEXT,
   skills TEXT[],
-  preferences TEXT[],
+  preferences TEXT,
   availability TIMESTAMP[],
   CONSTRAINT fk_user FOREIGN KEY (id) REFERENCES UserCredentials(id) ON DELETE CASCADE
 );
@@ -64,15 +64,16 @@ INSERT INTO UserProfile (
 (
   1, 'Alice Bobby', '123 Main St', 'Houston', 'TX', '77001',
   ARRAY['Cleaning'],
-  ARRAY['Evening'],
+  'Evening',
   ARRAY['2025-08-01 18:00:00'::timestamp]
 ),
 (
   2, 'Bob Lobby', '456 Elm St', 'Houston', 'TX', '77002',
   ARRAY['Cooking', 'Teamwork'],
-  ARRAY['Weekend'],
+  'Weekend',
   ARRAY['2025-08-02 09:00:00'::timestamp]
 );
+
 
 -- Seed volunteer history
 INSERT INTO VolunteerHistory (eventname, requiredSkills, date, status, volunteer_id)
