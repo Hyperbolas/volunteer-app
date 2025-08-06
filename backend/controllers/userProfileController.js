@@ -15,9 +15,9 @@ function validateUserProfile(profile) {
 }
 
 exports.getUserProfile = async (req, res) => {
-  const id = req.params.id;
+  const userId = req.params.userId;
   try {
-    const result = await db.query("SELECT * FROM UserProfile WHERE id = $1", [id]);
+    const result = await db.query("SELECT * FROM UserProfile WHERE user_id = $1", [userId]);
     if (result.rows.length === 0) {
       return res.status(404).json({ message: "Profile not found" });
     }
@@ -41,17 +41,18 @@ exports.getUserProfile = async (req, res) => {
 };
 
 exports.updateUserProfile = async (req, res) => {
-  const id = req.params.id;
+  const userId = req.params.userId;
   const profile = req.body;
   const { valid, errors } = validateUserProfile(profile);
   if (!valid) return res.status(400).json({ message: "Validation failed", errors });
   console.log("Incoming profile data:", profile);
+  console.log("Updating profile for userId:", userId);
 
   try {
     const result = await db.query(
-      `INSERT INTO UserProfile (id, full_name, address, city, state, zipcode, skills, preferences, availability)
+      `INSERT INTO UserProfile (user_id, full_name, address, city, state, zipcode, skills, preferences, availability)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-       ON CONFLICT (id)
+       ON CONFLICT (user_id)
        DO UPDATE SET
          full_name = EXCLUDED.full_name,
          address = EXCLUDED.address,
@@ -62,7 +63,7 @@ exports.updateUserProfile = async (req, res) => {
          preferences = EXCLUDED.preferences,
          availability = EXCLUDED.availability`,
       [
-        id,
+        userId,
         profile.fullName,
         profile.address1,
         profile.city,

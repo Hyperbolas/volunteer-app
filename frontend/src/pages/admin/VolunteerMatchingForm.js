@@ -48,8 +48,8 @@ const VolunteerMatchingForm = () => {
       return;
     }
     const volunteerName = volunteers.find((v) => v.id === selectedVolunteer)?.name;
-    const eventName = events.find((e) => e.id === selectedEvent)?.name;
-    setMessage(`${volunteerName} successfully matched to ${eventName}`);
+    const eventname = events.find((e) => e.id === selectedEvent)?.name;
+    setMessage(`${volunteerName} successfully matched to ${eventname}`);
     setSelectedEvent('');
     setSelectedVolunteer('');
     setFilteredEvents([]);

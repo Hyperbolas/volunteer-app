@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 //references chatgpt, https://www.npmjs.com/package/react-multi-date-picker for multi-date picker, https://www.youtube.com/watch?v=zCgruoRUxlk
 
 const UserProfileForm = () => {
-  const userId = "1"; // default ID
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -36,6 +35,7 @@ const UserProfileForm = () => {
   const navigate = useNavigate(); //helps redirect after submitting
 
   useEffect(() => {
+    const userId = localStorage.getItem('userId');
     fetch(`http://localhost:5000/api/profile/${userId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Not found");
@@ -226,8 +226,8 @@ const UserProfileForm = () => {
 
   function handleSubmit(e) {
     e.preventDefault();
-  
-    fetch("http://localhost:5000/api/profile/1", {
+    const userId = localStorage.getItem('userId');
+    fetch(`http://localhost:5000/api/profile/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -410,14 +410,14 @@ const UserProfileForm = () => {
             onChange={handleSkillsChange}
             required
           >
-            <option value="cleaning">Cleaning</option>
-            <option value="cooking">Cooking</option>
-            <option value="communication">Communication</option>
-            <option value="eventPlanning">Event Planning</option>
-            <option value="teamwork">Teamwork</option>
-            <option value="organization">Organization</option>
-            <option value="leadership">Leadership</option>
-            <option value="firstAid">First Aid</option>
+            <option value="Cleaning">Cleaning</option>
+            <option value="Cooking">Cooking</option>
+            <option value="Communication">Communication</option>
+            <option value="Event Planning">Event Planning</option>
+            <option value="Teamwork">Teamwork</option>
+            <option value="Organization">Organization</option>
+            <option value="Leadership">Leadership</option>
+            <option value="First Aid">First Aid</option>
           </select>
           {/*multiselect input*/}
           {errors.skills !== "" && (

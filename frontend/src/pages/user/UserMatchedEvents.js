@@ -2,30 +2,35 @@ import React, { useEffect, useState } from 'react';
 import UserNavBar from "../../components/UserNavBar";
 
 const UserMatchedEvents = () => {
+  const userId = localStorage.getItem('userId');
   const [matchedEvents, setMatchedEvents] = useState([]);
 
   useEffect(() => {
-  fetch('http://localhost:5000/api/matches/test-matches')
+  if (!userId) return;
+
+  fetch(`http://localhost:5000/api/matches/users/${userId}/matched-events`)
     .then((res) => res.json())
-    .then((data) => {setMatchedEvents(data[0]?.matches || []);})
+    .then((data) => {
+      setMatchedEvents(data[0]?.matches || [])
+      console.log("Fetched matched events:", data);})
     .catch((err) => console.error('Error fetching matches:', err));
-}, []);
+}, [userId]);
 
 
   const handleAttendanceChange = async (eventId, newStatus) => {
     try {
-      const response = await fetch('/api/matchRoute/${eventId}/status', {
+      const response = await fetch(`http://localhost:5000/api/matches/users/${userId}/events/${eventId}/status`, {
       method: 'PATCH',
-      headers: {'Content-Type': 'application.json'},
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ status: newStatus}),
     });
 
     if (!response.ok) throw new Error('Failed to update status');
 
-    const matchedEvents = matchedEvents.map((event) =>
-      event.id === eventId ? {...event, status: newStatus} : event);
-
-    setMatchedEvents(matchedEvents);
+    const updatedEvents = matchedEvents.map((event) =>
+      event.id === eventId ? { ...event, status: newStatus } : event
+    );
+    setMatchedEvents(updatedEvents);
 
     } catch(error) {
       console.error('Error updating status', error)
@@ -54,18 +59,18 @@ const UserMatchedEvents = () => {
           <tbody>
             {matchedEvents.map((event) => (
               <tr key={event.id}>
-                <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.eventName}</td>
+                <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.eventname}</td>
                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.date.join(", ")}</td>
                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.location}</td>
                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.skills.join(", ")}</td>
                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.status}
                   <select
-                  value = {event.UserStatus}
+                  value = {event.userStatus}
                   onChange={(e) => handleAttendanceChange(event.id,e.target.value)}
                   >
                     <option value="">Select</option>
-                    <option value={"attending"}>Attending</option>
-                    <option value={"attended"}>Attended</option>
+                    <option value={"Attending"}>Attending</option>
+                    <option value={"Attended"}>Attended</option>
                   </select>
                 </td>
               </tr>

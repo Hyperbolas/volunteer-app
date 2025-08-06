@@ -22,9 +22,12 @@ const handleRegister = async (e) => {
       body: JSON.stringify({ email, password, role })
     });
 
-    const data = await response.json();
+    const data = await response.json();  
 
-    if (response.ok) {
+    if (response.ok && data.userId) {
+      localStorage.setItem('userId', data.userId);      
+      localStorage.setItem('userRole', data.role);     
+
       alert("Registered successfully! You can now log in.");
       setIsRegistered(true);
     } else {
@@ -35,6 +38,7 @@ const handleRegister = async (e) => {
     console.error("Registration error:", error);
   }
 };
+
 
 
   const handleFirstLogin = () => {
