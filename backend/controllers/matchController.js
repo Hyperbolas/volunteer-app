@@ -1,96 +1,123 @@
-//example data replace with DB
-let events = [
-  {
-    id: 1,
-    eventName: "Tree Planting",
-    description: "Tree Planting for a local park",
-    location: "Chicago, IL",
-    skills: ["Communication", "Teamwork"],
-    urgency: "High",
-    date: ["2025-07-19","2025-07-20", "2025-07-21"],
-  },
-  {
-    id: 2,
-    eventName: "Beach Cleanup",
-    description: "Beach cleaning for a turtle reserve",
-    location: "Houston, TX",
-    skills: ["Teamwork", "Cleaning"],
-    urgency: "Medium",
-    date: ["2025-07-28", "2025-07-26"],
-  },
-  {
-    id: 3,
-    eventName: "Food Drive",
-    description: "Food drive for the elderly",
-    location: "Houston, TX",
-    skills: ["Organization", "Communication"],
-    urgency: "Low",
-    date: ["2025-07-25", "2025-07-26"],
-  },
-  { id: 4,
-    eventName: "Food Drive",
-    description: "Food drive for community",
-    location: "San Diego, CA",
-    skills: ["Organization", "Communication"],
-    urgency: "High",
-    date: ["2025-07-25", "2025-07-26"],
+const db = require('../database/db');
+
+function normalizeInput(input) {
+  if (Array.isArray(input)) return input;
+  if (typeof input === 'string') return input.split(',');
+  return [];
+}
+
+function normalizeDate(d) {
+  try {
+    return new Date(d).toISOString().slice(0, 10); // => "YYYY-MM-DD"
+  } catch {
+    return null;
   }
+}
 
-];
-
-let volunteers = [
-  {
-    id: 1, 
-    volunteerName: "Volunteer A (name)",
-    city: "Houston",
-    state: "TX",
-    requiredSkills: ["Cleaning", "Organization"],
-    date: ["2025-07-26"],
-  },
-  {
-    id: 2, 
-    volunteerName: "Volunteer B (name)",
-    city: "San Diego",
-    state: "CA",
-    requiredSkills: ["Organization", "Teamwork"],
-    date: ["2025-07-26", "2025-07-25"],
-  },
-  {
-    id: 3,
-    volunteerName: "Volunteer C (name)",
-    city: "Chicago",
-    state: "IL",
-    requiredSkills: ["Communication","Event Planning", "Teamwork"],
-    date: ["2025-07-19"],
-  },
-    ];
-
-  //function to check matches with location and atleast one of the req. skills, and dates
 function matchUserToEvents(volunteer, event) {
-  const dateMatch = event.date.some(d => volunteer.date.includes(d));
-  const skillMatch = event.skills.some(skill => 
-    volunteer.requiredSkills.includes(skill));
+  const volunteerDates = (volunteer.availability || []).map(normalizeDate);
+  const volunteerSkills = normalizeInput(volunteer.skills);
+  const eventDates = normalizeInput(event.date).map(normalizeDate);
+  const eventSkills = normalizeInput(event.skills);
+
+  const dateMatch = eventDates.some(d => volunteerDates.includes(d));
+  const skillMatch = eventSkills.some(skill => volunteerSkills.includes(skill));
   const fullLocation = `${volunteer.city}, ${volunteer.state}`;
   const locationMatch = event.location === fullLocation;
-  
-  return dateMatch && skillMatch && locationMatch;
-} //returns events that match the users preferences
 
-  /*function to check matches for all users, displays it in http://localhost:5000/api/matches/test-matches
-  /this is for development and can be removed or used for admins later */
-function getMatchesForAll(req, res) {
-  const results = volunteers.map(volunteer => {
-    const matchedEvents = events.filter(event => matchUserToEvents(volunteer, event));
-    return {
-        volunteer: volunteer.volunteerName,
-        matches: matchedEvents
-    }; //returns all matches for all users based on their profile
+  console.log({
+    volunteerId: volunteer.user_id,
+    eventId: event.id,
+    volunteerDates,
+    eventDates,
+    dateMatch,
+    volunteerSkills,
+    eventSkills,
+    skillMatch,
+    fullLocation,
+    eventLocation: event.location,
+    locationMatch
   });
 
-  res.json(results);
+
+  return dateMatch && skillMatch && locationMatch;
 };
+
+async function getMatchesForUser(req, res) {
+  const userId = req.params.userId;
+
+  try {
+    const { rows: volunteers } = await db.query(
+      'SELECT * FROM userprofile WHERE user_id = $1',
+      [userId]
+    );
+    const { rows: events } = await db.query('SELECT * FROM eventdetails');
+
+    const volunteer = volunteers[0];
+    if (!volunteer) {
+      return res.status(404).json({ error: 'Volunteer not found' });
+    }
+
+    const matchedEvents = [];
+
+    for (const event of events) {
+      if (matchUserToEvents(volunteer, event)) {
+        console.log(`Matched: user ${userId} with event ${event.id}`);
+
+        //insert into UserEvents if not already there
+        await db.query(
+          `INSERT INTO userevents (user_id, event_id, status)
+           VALUES ($1, $2, $3)
+          ON CONFLICT (user_id, event_id) DO NOTHING`,
+          [userId, event.id, 'Select']
+        );
+            // Get status from UserEvents table
+        const { rows: statusRows } = await db.query(
+          `SELECT status FROM userevents WHERE user_id = $1 AND event_id = $2`,
+          [userId, event.id]
+        );
+
+        const status = statusRows[0]?.status || 'Select';
+
+        // Include status in the event object
+        matchedEvents.push({
+          ...event,
+          userStatus: status, // match casing with frontend
+        });
+      }
+    }
+
+
+    res.json([{ volunteer: volunteer.full_name, matches: matchedEvents }]);
+      console.log("User ID of matched events:", userId);
+      console.log("User ID of matched events:", matchedEvents);
+  } catch (err) {
+    console.error('Error matching user to events:', err);
+    res.status(500).json({ error: 'Server error while matching user' });
+  }
+  };
+
+async function updateEventStatus(req, res) {
+  const { userId, eventId } = req.params;
+  const { status } = req.body;
+
+  console.log(`Updating status for user ${userId}, event ${eventId} to '${status}'`);
+
+
+  try {
+    await db.query(
+      'UPDATE userevents SET status = $1 WHERE user_id = $2 AND event_id = $3',
+      [status, userId, eventId]
+    );
+    res.json({ message: 'Status updated successfully' });
+  } catch (err) {
+    console.error('Error updating event status:', err);
+    res.status(500).json({ error: 'Server error while updating status' });
+  }
+}
 
 module.exports = { 
   matchUserToEvents,
-  getMatchesForAll
+  getMatchesForUser,
+  updateEventStatus
 };

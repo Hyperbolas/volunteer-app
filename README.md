@@ -102,19 +102,25 @@ Front end must include the following components:
 
 ---
 
-## Assignment 3: Back-End
+Submit a Word/PDF document with your answers.
+Use GitHub for your group collaboration and code.
+Answer these questions:
 
-Back end must include the following components/modules:
+- GitHub Repository Link (1 point)
+  Provide the link to your GitHub repository for TAs to view the code.
+- Design and Development Methodology (1 point)
+  Discuss if your design and development methodology has changed since Assignment 1 and why.
+- Front-End Technologies and Responsibilities (2 points)
+  List what front-end technologies you are using and why. List who is responsible for doing what in your group.
+  -Screenshots of Your Front End (5 points)
+  Provide screenshots of your front end, each page.
 
-<<<<<<< HEAD
-=======
 ---
 
 ## Assignment 3: Back-End
 
 Back end must include the following components/modules:
 
->>>>>>> f7e51a28d1bc13ea7f085d0d51afd563717c45e5
 - Login Module: Handle user authentication, registration, and login functionality.
 - User Profile Management Module: Manage user profile data, including location, skills, preferences, and availability.
 - Event Management Module: Create and manage events, including required skills, location, urgency, and event details.
@@ -122,11 +128,7 @@ Back end must include the following components/modules:
 - Notification Module: Logic to send notifications to volunteers for event assignments, updates, and reminders.
 - Volunteer History Module: Track and display volunteer participation history.
   
-<<<<<<< HEAD
-# Important Deliverables
-=======
 ## Important Deliverables
->>>>>>> f7e51a28d1bc13ea7f085d0d51afd563717c45e5
 - Validations: Ensure validations are in place for required fields, field types, and field lengths in the backend code.
 
 - Unit Tests: All backend code should be covered by unit tests. Code coverage should be greater than 80%. Research how to run the code coverage reports. Each IDE has plugins to generate reports. Here are a few pointers: Stackify Code Coverage ToolsLinks to an external site.
@@ -134,3 +136,23 @@ Back end must include the following components/modules:
 - Integration with Front End: All front-end components should be connected to the back end. Form data should be populated from the back end. The back end should receive data from the front end, validate it, and prepare it to persist to the database.
 
 - No Database Implementation: We are not implementing the database yet. For this assignment, you can hard code the values.
+
+---
+
+## Assignment 4: Database Implementation
+
+You can use RDBMS or NoSQL database.
+
+Database must include the following tables/documents:
+
+- UserCredentials: (ID & password), password should be encrypted.
+- UserProfile: Stores user details like full name, address, city, state, zipcode, skills, preferences, and availability.
+- EventDetails: Stores details of the events such as event name, description, location, required skills, urgency, and event date.
+- VolunteerHistory: Tracks volunteer participation in events.
+- States: Stores state codes and names (if required).
+  
+## Important Deliverables
+- Validations: Ensure validations are in place for required fields, field types, and field lengths.
+- Data Retrieval and Display: Backend should retrieve data from the database and display it to the front end.
+- Data Persistence: Form data should be populated from the backend. The backend should receive data from the front end, validate it, and persist it to the database.
+- Unit Tests: Any new code added should be covered by unit tests. Keep code coverage above 80%.

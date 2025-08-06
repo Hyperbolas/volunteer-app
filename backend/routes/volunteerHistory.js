@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const { getVolunteerHistory } = require("../controllers/volunteerHistoryController");
-router.get("/history/:userId", getVolunteerHistory);
+const {
+  getAllVolunteerHistories,  // admin view
+} = require("../controllers/volunteerHistoryController");
+
+router.get("/", getAllVolunteerHistories);  
 
 module.exports = router;

@@ -16,7 +16,7 @@ app.use("/api", notificationRoutes);
 //app.use('/api/eventRoute', eventRoutes); 
 
 const historyRoutes = require("./routes/volunteerHistory");
-app.use("/api", historyRoutes);
+app.use("/api/volunteer-history", historyRoutes);
 
 const userProfileRoutes = require('./routes/userProfile'); 
 app.use('/api', userProfileRoutes);

@@ -8,7 +8,7 @@ function VolunteerParticipationHistory() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/history/1") 
+    fetch("http://localhost:5000/api/volunteer-history")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch history");
         return res.json();
@@ -39,9 +39,9 @@ function VolunteerParticipationHistory() {
           <tbody>
             {histories.map((entry, idx) => (
               <tr key={idx}>
-                <td>{entry.volunteerName}</td>
-                <td>{entry.eventName}</td>
-                <td>{entry.requiredSkills.join(", ")}</td>
+                <td>{entry.volunteername}</td>
+                <td>{entry.eventname}</td>
+                <td>{entry.requiredskills.join(", ")}</td>
                 <td>{entry.date}</td>
                 <td>{entry.status}</td>
               </tr>

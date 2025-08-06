@@ -8,13 +8,20 @@ const ViewEvents = () => {
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch(BASE_URL)
-      .then((res) => res.json())
-      .then((data) => setEvents(data))
-      .catch((err) => console.error('Error fetching events:', err));
+useEffect(() => {
+  fetch(BASE_URL)
+    .then((res) => res.json())
+    .then((data) => {
+      if (Array.isArray(data)) {
+        setEvents(data);
+      } else {
+        console.error('Expected array but got:', data);
+        setEvents([]); //prevent .map from crashing
+      }
+    })
+    .catch((err) => console.error('Error fetching events:', err));
+}, []);
 
-  }, []);
 
 const handleStatus = async (eventId, newStatus) => {
   try {
