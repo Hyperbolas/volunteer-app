@@ -50,9 +50,11 @@ const UserMatchedEvents = () => {
           <thead>
             <tr style={{ backgroundColor: '#ddd' }}>
               <th style={{ padding: '10px', border: '1px solid #ccc' }}>Event Name</th>
+              <th style={{ padding: '10px', border: '1px solid #ccc' }}>Description</th>
               <th style={{ padding: '10px', border: '1px solid #ccc' }}>Dates</th>
               <th style={{ padding: '10px', border: '1px solid #ccc' }}>Location</th>
               <th style={{ padding: '10px', border: '1px solid #ccc' }}>Skills</th>
+              <th style={{ padding: '10px', border: '1px solid #ccc' }}>Urgency</th>
               <th style={{ padding: '10px', border: '1px solid #ccc' }}>Status</th>
             </tr>
           </thead>
@@ -60,9 +62,11 @@ const UserMatchedEvents = () => {
             {matchedEvents.map((event) => (
               <tr key={event.id}>
                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.eventname}</td>
+                <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.description}</td>
                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.date.join(", ")}</td>
                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.location}</td>
                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.skills.join(", ")}</td>
+                <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.urgency}</td>
                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>{event.status}
                   <select
                   value = {event.userStatus}
