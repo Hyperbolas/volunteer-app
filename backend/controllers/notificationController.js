@@ -1,5 +1,5 @@
-const notifications = [];
-//references chatgpt, https://www.youtube.com/watch?v=UuhnalzKwE0
+const db = require('../database/db'); // To interact with DB
+
 // Send a notification to a user
 function sendNotification(req, res) {
   const { userEmail, message } = req.body;
@@ -10,13 +10,14 @@ function sendNotification(req, res) {
       .json({ error: "User email and message are required" });
   }
 
-  // Add the notification to the list
+  // Add the notification to the list (simulated database)
   notifications.push({ userEmail, message });
 
   res.status(200).json({ message: "Notification sent successfully" });
 }
 
-function getNotifications(req, res) {
+// Get notifications from the database
+async function getNotifications(req, res) {
   const { email } = req.query;
 
   if (!email) {
@@ -25,14 +26,58 @@ function getNotifications(req, res) {
       .json({ error: "Email is required to fetch notifications" });
   }
 
-  const userNotifications = notifications.filter((n) => n.userEmail === email);
+  try {
+    // Query the database for notifications for the specific user
+    const result = await db.query(
+      "SELECT * FROM Notifications WHERE user_id = (SELECT id FROM UserCredentials WHERE email = $1)",
+      [email]
+    );
 
-  res.status(200).json(userNotifications);
+    const userNotifications = result.rows;
+
+    res.status(200).json(userNotifications); // Send back the notifications
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    res.status(500).json({ error: "Failed to fetch notifications" });
+  }
 }
 
-function sendAssignmentNotification(req, res) {
-  res.status(200).json({ message: "Assignment notification sent" });
+// Send assignment notification - modified to store into DB
+async function sendAssignmentNotification(req, res) {
+  const { userEmail, eventName } = req.body;
+
+  if (!userEmail || !eventName) {
+    return res.status(400).json({ error: "User email and event name are required" });
+  }
+
+  try {
+    // Find the user ID using the email
+    const userResult = await db.query(
+      "SELECT id FROM UserCredentials WHERE email = $1",
+      [userEmail]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const userId = userResult.rows[0].id;
+
+    // Insert the notification into the database
+    const result = await db.query(
+      "INSERT INTO Notifications (user_id, message) VALUES ($1, $2) RETURNING *",
+      [userId, `You’ve been assigned to the event: ${eventName}`]
+    );
+
+    res.status(200).json({
+      message: "Assignment notification sent",
+      notification: result.rows[0],
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to send assignment notification" });
+  }
 }
+
 
 function sendUpdateNotification(req, res) {
   res.status(200).json({ message: "Update notification sent" });

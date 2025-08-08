@@ -1,3 +1,4 @@
+require("dotenv").config(); // Make sure this line is at the top
 const express = require("express");
 const cors = require("cors");
 
@@ -13,22 +14,21 @@ const notificationRoutes = require("./routes/notification");
 app.use("/api", notificationRoutes);
 
 //const eventRoutes = require('./routes/eventRoute');
-//app.use('/api/eventRoute', eventRoutes); 
+//app.use('/api/eventRoute', eventRoutes);
 
 const historyRoutes = require("./routes/volunteerHistory");
 app.use("/api/volunteer-history", historyRoutes);
 
-const userProfileRoutes = require('./routes/userProfile'); 
-app.use('/api', userProfileRoutes);
+const userProfileRoutes = require("./routes/userProfile");
+app.use("/api", userProfileRoutes);
 
-//Admin View and Create Events 
-const eventRoutes = require('./routes/eventRoute');
-app.use('/api/eventRoute', eventRoutes); 
+//Admin View and Create Events
+const eventRoutes = require("./routes/eventRoute");
+app.use("/api/eventRoute", eventRoutes);
 
 //Volunteer matching Algo
-const matchRoutes = require('./routes/matchRoute');
-app.use('/api/matches', matchRoutes);
-
+const matchRoutes = require("./routes/matchRoute");
+app.use("/api/matches", matchRoutes);
 
 app.get("/", (req, res) => {
   res.send("Backend server is running");
