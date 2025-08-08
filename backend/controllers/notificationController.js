@@ -17,6 +17,7 @@ function sendNotification(req, res) {
 }
 
 // Get notifications from the database
+// Get notifications from the database
 async function getNotifications(req, res) {
   const { email } = req.query;
 
@@ -29,11 +30,15 @@ async function getNotifications(req, res) {
   try {
     // Query the database for notifications for the specific user
     const result = await db.query(
-      "SELECT * FROM Notifications WHERE user_id = (SELECT id FROM UserCredentials WHERE email = $1)",
+      "SELECT * FROM Notifications WHERE user_id = (SELECT id FROM UserCredentials WHERE LOWER(email) = LOWER($1))",
       [email]
     );
 
     const userNotifications = result.rows;
+
+    if (userNotifications.length === 0) {
+      return res.status(404).json({ error: "No notifications found" });
+    }
 
     res.status(200).json(userNotifications); // Send back the notifications
   } catch (error) {
@@ -41,6 +46,7 @@ async function getNotifications(req, res) {
     res.status(500).json({ error: "Failed to fetch notifications" });
   }
 }
+
 
 // Send assignment notification - modified to store into DB
 async function sendAssignmentNotification(req, res) {
