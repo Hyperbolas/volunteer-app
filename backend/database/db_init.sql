@@ -44,16 +44,6 @@ CREATE TABLE IF NOT EXISTS UserEvents (
   UNIQUE (user_id, event_id)
 );
 
-/* VolunteerHistory */
-CREATE TABLE IF NOT EXISTS VolunteerHistory (
-    id SERIAL PRIMARY KEY,
-    eventname TEXT,
-    requiredskills TEXT[],
-    date TEXT[],
-    status TEXT,
-    volunteer_id INT REFERENCES UserCredentials(id)
-);
-
 /* Notifications */
 CREATE TABLE IF NOT EXISTS Notifications (
   id SERIAL PRIMARY KEY,
@@ -62,7 +52,6 @@ CREATE TABLE IF NOT EXISTS Notifications (
   date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   read BOOLEAN DEFAULT FALSE
 );
-
 
 -- Seed user credentials
 INSERT INTO UserCredentials (email, password_hash, role)
@@ -92,12 +81,7 @@ INSERT INTO EventDetails (eventname, description, location, skills, urgency, dat
   ('Habitat Build','Assist in building affordable homes','Houston, TX', ARRAY['Teamwork','Organization'],'High', ARRAY['2025-08-27','2025-08-28'],'Active'),
   ('Park Restoration','Replant and beautify local parks','Fort Worth, TX', ARRAY['Teamwork','Cleaning'],'Medium', ARRAY['2025-08-23','2025-08-29'],'Active');
 
-INSERT INTO VolunteerHistory (eventname, requiredskills, date, status, volunteer_id) VALUES
-  ('Warehouse Cleaning', ARRAY['Cleaning'], ARRAY['2025-05-10'], 'Completed', (SELECT id FROM UserCredentials WHERE email='alice@example.com')),
-  ('Shelter Kitchen Shift', ARRAY['Cooking','Teamwork'], ARRAY['2025-06-22'], 'Completed', (SELECT id FROM UserCredentials WHERE email='alice@example.com')),
-  ('Community Meeting', ARRAY['Communication'], ARRAY['2025-07-09'], 'Pending', (SELECT id FROM UserCredentials WHERE email='bob@example.com'));
 
--- Seed UserEvents (used by new history query)
 INSERT INTO UserEvents (user_id, event_id, status) VALUES
   ((SELECT id FROM UserCredentials WHERE email='alice@example.com'), 1, 'Completed'),
   ((SELECT id FROM UserCredentials WHERE email='alice@example.com'), 2, 'Completed'),
