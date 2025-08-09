@@ -25,5 +25,5 @@ yarn-error.log*
 # package-lock.json
 
 #docker 
-.env.docker
-
+.env.docker/
+/backend/.env

@@ -52,6 +52,15 @@ const handleStatus = async (eventId, newStatus) => {
           <button onClick={() => navigate('/admin/AdminCreateEvent')}>
               Create Event
           </button>
+
+          <button
+          onClick = {()=>
+            window.location = "http://localhost:5000/api/eventRoute/export.csv"
+          }
+          className = "download-btn"
+          >
+            Download CSV
+          </button>
         </div>
         <table className="history-table">
           <thead>

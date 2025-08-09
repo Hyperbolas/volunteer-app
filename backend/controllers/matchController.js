@@ -92,7 +92,7 @@ async function getMatchesForUser(req, res) {
       // console.log("User ID", userId);
       // console.log("Matched events for user ID", userId, matchedEvents);
   } catch (err) {
-    console.error('Error matching user to events:', err);
+    console.error('Error matching user to events:', err); 
     res.status(500).json({ error: 'Server error while matching user' });
   }
   };
@@ -135,4 +135,6 @@ module.exports = {
   getMatchesForUser,
   updateEventStatus,
   getAllUsers,
+  normalizeInput,
+  normalizeDate
 };
