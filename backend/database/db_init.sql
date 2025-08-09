@@ -54,6 +54,15 @@ CREATE TABLE IF NOT EXISTS VolunteerHistory (
     volunteer_id INT REFERENCES UserCredentials(id)
 );
 
+/* Notifications */
+CREATE TABLE IF NOT EXISTS Notifications (
+  id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES UserCredentials(id) ON DELETE CASCADE,
+  message TEXT NOT NULL,
+  date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  read BOOLEAN DEFAULT FALSE
+);
+
 
 -- Seed user credentials
 INSERT INTO UserCredentials (email, password_hash, role)
