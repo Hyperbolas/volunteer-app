@@ -26,6 +26,15 @@ function VolunteerParticipationHistory() {
       <AdminNavBar />
       <div className="history-container">
         <h2 className="history-heading">Volunteer Participation History</h2>
+        <button
+          onClick = {()=>
+            window.location = "http://localhost:5000/api/volunteer-history/export.csv"
+          }
+          className = "download-btn"
+          >
+            Download CSV
+          </button>
+        
         <table className="history-table">
           <thead>
             <tr>
