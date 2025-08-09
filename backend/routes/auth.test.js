@@ -3,17 +3,21 @@ const app = require('../server');
 //references chatgpt, https://medium.com/walmartglobaltech/understanding-the-jest-coverage-report-a-complete-guide-966733d6f730, https://medium.com/@blturner3527/code-coverage-and-testing-with-jest-9641b5d0e0bc
 
 describe('Auth API', () => {
-  it('should register a new user', async () => {
+    it('should register a new user', async () => {
+    const uniqueEmail = `testuser_${Date.now()}@example.com`;
+
     const res = await request(app)
       .post('/api/register')
       .send({
-        email: 'testuser@example.com',
+        email: uniqueEmail,
         password: 'testpass',
         role: 'volunteer',
       });
+
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty('message', 'User registered');
   });
+
 
   it('should not register the same user twice', async () => {
     // Register user first time
