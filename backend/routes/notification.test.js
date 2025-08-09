@@ -7,7 +7,7 @@ describe("Notification API", () => {
   const testMessage = "This is a test notification.";
   const testEventName = "Test Event";
 
-  // Before all tests, insert a test user
+  // Before all tests, clean up and insert a test user
   beforeAll(async () => {
     await db.query(`DELETE FROM Notifications`);
     await db.query(`DELETE FROM UserCredentials WHERE email = $1`, [testEmail]);
@@ -24,7 +24,6 @@ describe("Notification API", () => {
     await db.end(); // Close DB pool
   });
 
-  // ✅ Existing Tests
   it("sends assignment notification successfully", async () => {
     const res = await request(app)
       .post("/api/notify/assignment")
@@ -81,7 +80,7 @@ describe("Notification API", () => {
     expect(res.body.message).toBe("Reminder notification sent");
   });
 
-  // ✅ New Tests for Full Coverage
+  // New tests for full coverage
 
   it("sends a basic notification using sendNotification", async () => {
     const res = await request(app)
@@ -102,6 +101,7 @@ describe("Notification API", () => {
   });
 
   it("handles DB error during notification fetch", async () => {
+    // Mock db.query to throw error
     const originalQuery = db.query;
     db.query = jest.fn(() => {
       throw new Error("Simulated DB error");
@@ -114,6 +114,7 @@ describe("Notification API", () => {
     expect(res.status).toBe(500);
     expect(res.body.error).toBe("Failed to fetch notifications");
 
+    // Restore original query method
     db.query = originalQuery;
   });
 
@@ -127,6 +128,7 @@ describe("Notification API", () => {
   });
 
   it("handles DB error in sendAssignmentNotification", async () => {
+    // Mock db.query: first call resolves user, second call rejects insert
     const originalQuery = db.query;
     db.query = jest
       .fn()
@@ -140,6 +142,7 @@ describe("Notification API", () => {
     expect(res.status).toBe(500);
     expect(res.body.error).toBe("Failed to send assignment notification");
 
+    // Restore original query method
     db.query = originalQuery;
   });
 });
