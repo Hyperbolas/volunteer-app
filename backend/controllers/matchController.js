@@ -25,19 +25,19 @@ function matchUserToEvents(volunteer, event) {
   const fullLocation = `${volunteer.city}, ${volunteer.state}`;
   const locationMatch = event.location === fullLocation;
 
-  console.log({
-    volunteerId: volunteer.user_id,
-    eventId: event.id,
-    volunteerDates,
-    eventDates,
-    dateMatch,
-    volunteerSkills,
-    eventSkills,
-    skillMatch,
-    fullLocation,
-    eventLocation: event.location,
-    locationMatch
-  });
+  // console.log({
+  //   volunteerId: volunteer.user_id,
+  //   eventId: event.id,
+  //   volunteerDates,
+  //   eventDates,
+  //   dateMatch,
+  //   volunteerSkills,
+  //   eventSkills,
+  //   skillMatch,
+  //   fullLocation,
+  //   eventLocation: event.location,
+  //   locationMatch
+  // });
 
 
   return dateMatch && skillMatch && locationMatch;
@@ -89,8 +89,8 @@ async function getMatchesForUser(req, res) {
 
 
     res.json([{ volunteer: volunteer.full_name, matches: matchedEvents }]);
-      console.log("User ID of matched events:", userId);
-      console.log("User ID of matched events:", matchedEvents);
+      // console.log("User ID", userId);
+      // console.log("Matched events for user ID", userId, matchedEvents);
   } catch (err) {
     console.error('Error matching user to events:', err);
     res.status(500).json({ error: 'Server error while matching user' });
@@ -116,8 +116,23 @@ async function updateEventStatus(req, res) {
   }
 }
 
+async function getAllUsers(req, res) {
+  try {
+    const result = await db.query(`
+      SELECT user_id, full_name, skills 
+      FROM userprofile
+    `);
+    res.json(result.rows);
+    console.log("users:", {result})
+  } catch (err) {
+    console.error("Error fetching volunteers:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+}
+
 module.exports = { 
   matchUserToEvents,
   getMatchesForUser,
-  updateEventStatus
+  updateEventStatus,
+  getAllUsers,
 };

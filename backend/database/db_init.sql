@@ -44,6 +44,15 @@ CREATE TABLE IF NOT EXISTS UserEvents (
   UNIQUE (user_id, event_id)
 );
 
+/* Notifications */
+CREATE TABLE IF NOT EXISTS Notifications (
+  id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES UserCredentials(id) ON DELETE CASCADE,
+  message TEXT NOT NULL,
+  date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  read BOOLEAN DEFAULT FALSE
+);
+
 -- Seed user credentials
 INSERT INTO UserCredentials (email, password_hash, role)
 VALUES 
@@ -72,7 +81,7 @@ INSERT INTO EventDetails (eventname, description, location, skills, urgency, dat
   ('Habitat Build','Assist in building affordable homes','Houston, TX', ARRAY['Teamwork','Organization'],'High', ARRAY['2025-08-27','2025-08-28'],'Active'),
   ('Park Restoration','Replant and beautify local parks','Fort Worth, TX', ARRAY['Teamwork','Cleaning'],'Medium', ARRAY['2025-08-23','2025-08-29'],'Active');
 
--- Seed UserEvents (used by your new history query)
+
 INSERT INTO UserEvents (user_id, event_id, status) VALUES
   ((SELECT id FROM UserCredentials WHERE email='alice@example.com'), 1, 'Completed'),
   ((SELECT id FROM UserCredentials WHERE email='alice@example.com'), 2, 'Completed'),

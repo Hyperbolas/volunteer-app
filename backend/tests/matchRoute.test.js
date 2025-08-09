@@ -22,9 +22,10 @@ const express = require('express');
 jest.mock('../controllers/matchController', () => ({
   getMatchesForUser: jest.fn((req, res) => res.status(200).json({ message: 'matched events' })),
   updateEventStatus: jest.fn((req, res) => res.status(200).json({ message: 'status updated' })),
+  getAllUsers: jest.fn((req, res) => res.status(200).json({ message: 'all users' }))
 }));
 
-const { getMatchesForUser, updateEventStatus } = require('../controllers/matchController');
+const { getMatchesForUser, updateEventStatus, getAllUsers } = require('../controllers/matchController');
 const matchRoutes = require('../routes/matchRoute');
 
 const app = express();
@@ -33,7 +34,7 @@ app.use('/', matchRoutes);
 
 describe('Match Routes', () => {
   test('GET /users/:userId/matched-events calls getMatchesForUser', async () => {
-    const res = await request(app).get('/users/1/matched-events');
+    const res = await request(app).get('/users/userId/matched-events');
     
     expect(getMatchesForUser).toHaveBeenCalled();
     expect(res.statusCode).toBe(200);
@@ -42,12 +43,20 @@ describe('Match Routes', () => {
 
   test('PATCH /:eventId/status calls updateEventStatus', async () => {
     const res = await request(app)
-      .patch('/123/status')
+      .patch('/users/1/events/123/status')
       .send({ status: 'Attended' });
 
     expect(updateEventStatus).toHaveBeenCalled();
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual({ message: 'status updated' });
+  });
+
+  test('GET /users', async () => {
+    const res = await request(app).get('/users');
+    
+    expect(getAllUsers).toHaveBeenCalled();
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual({ message: 'all users' });
   });
 });
 

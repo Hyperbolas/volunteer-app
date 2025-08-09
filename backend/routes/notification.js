@@ -9,12 +9,10 @@ const {
   getNotifications,
 } = require("../controllers/notificationController");
 
-router.post("/notify/assignment", sendAssignmentNotification);
+router.post("/notify/assignment", sendAssignmentNotification);  // This is the route to send assignment notifications
 
 router.post("/notify/update", sendUpdateNotification);
-
 router.post("/notify/reminder", sendReminderNotification);
-
 router.post("/notifications", sendNotification);
 router.get("/notifications", getNotifications);
 
