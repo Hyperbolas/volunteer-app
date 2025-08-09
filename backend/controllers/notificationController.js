@@ -1,7 +1,7 @@
 const db = require('../database/db'); // To interact with DB
 
-// Send a notification to a user
-function sendNotification(req, res) {
+// Send a notification to a user (DB-backed)
+async function sendNotification(req, res) {
   const { userEmail, message } = req.body;
 
   if (!userEmail || !message) {
@@ -10,12 +10,34 @@ function sendNotification(req, res) {
       .json({ error: "User email and message are required" });
   }
 
-  // Add the notification to the list (simulated database)
-  notifications.push({ userEmail, message });
+  try {
+    // Look up the user ID from email
+    const userResult = await db.query(
+      "SELECT id FROM UserCredentials WHERE LOWER(email) = LOWER($1)",
+      [userEmail]
+    );
 
-  res.status(200).json({ message: "Notification sent successfully" });
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const userId = userResult.rows[0].id;
+
+    // Insert the notification into the database
+    await db.query(
+      "INSERT INTO Notifications (user_id, message) VALUES ($1, $2)",
+      [userId, message]
+    );
+
+    res.status(200).json({ message: "Notification sent successfully" });
+  } catch (error) {
+    console.error("Error sending notification:", error);
+    res.status(500).json({ error: "Failed to send notification" });
+  }
 }
 
+
+// Get notifications from the database
 // Get notifications from the database
 async function getNotifications(req, res) {
   const { email } = req.query;
@@ -29,11 +51,15 @@ async function getNotifications(req, res) {
   try {
     // Query the database for notifications for the specific user
     const result = await db.query(
-      "SELECT * FROM Notifications WHERE user_id = (SELECT id FROM UserCredentials WHERE email = $1)",
+      "SELECT * FROM Notifications WHERE user_id = (SELECT id FROM UserCredentials WHERE LOWER(email) = LOWER($1))",
       [email]
     );
 
     const userNotifications = result.rows;
+
+    if (userNotifications.length === 0) {
+      return res.status(404).json({ error: "No notifications found" });
+    }
 
     res.status(200).json(userNotifications); // Send back the notifications
   } catch (error) {
@@ -41,6 +67,7 @@ async function getNotifications(req, res) {
     res.status(500).json({ error: "Failed to fetch notifications" });
   }
 }
+
 
 // Send assignment notification - modified to store into DB
 async function sendAssignmentNotification(req, res) {
