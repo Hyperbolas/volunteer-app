@@ -5,13 +5,14 @@ exports.getAllVolunteerHistories = async (req, res) => {
   try {
     const result = await db.query(`
       SELECT 
-        vh.eventname,
-        vh.requiredskills,
-        vh.date,
-        vh.status,
+        ed.eventname,
+        ed.skills AS requiredskills,
+        ed.date,
+        ue.status,
         up.full_name AS volunteername
-      FROM VolunteerHistory vh
-      JOIN UserProfile up ON vh.volunteer_id = up.id
+      FROM UserEvents ue
+      JOIN UserProfile up ON ue.user_id = up.user_id
+      JOIN EventDetails ed ON ue.event_id = ed.id
     `);
     res.status(200).json(result.rows);
   } catch (err) {

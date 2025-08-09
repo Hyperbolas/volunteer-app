@@ -1,58 +1,76 @@
+// export default VolunteerMatchingForm;
 import React, { useState, useEffect } from 'react';
 import AdminNavBar from "../../components/AdminNavBar";
-import "./VolunteerMatchingForm.css"
+import "./VolunteerMatchingForm.css";
+
 
 const VolunteerMatchingForm = () => {
+  const userId = localStorage.getItem('userId');
   const [volunteers, setVolunteers] = useState([]);
-  const [events, setEvents] = useState([]);
   const [selectedVolunteer, setSelectedVolunteer] = useState('');
-  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [matchedEvents, setMatchedEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState('');
   const [message, setMessage] = useState('');
 
-  // Dummy data
+  //fetch all volunteers (real API call or dummy for now)
   useEffect(() => {
-    setVolunteers([
-      { id: 'v1', name: 'Alice', skills: ['Cleaning', 'Teamwork'] },
-      { id: 'v2', name: 'Bob', skills: ['Cooking', 'Organization'] },
-      { id: 'v3', name: 'Charlie', skills: ['Communication', 'Event Setup'] },
-    ]);
+    const fetchVolunteers = async () => {
+      const res = await fetch(`http://localhost:5000/api/matches/users/`); 
+      const data = await res.json();
+      console.log('fetched data:', data);
+      setVolunteers(data); //assumes array of { user_id, full_name, skills }
+    };
 
-    setEvents([
-      { id: 'e1', name: 'Beach Cleanup', requiredSkills: ['Cleaning'] },
-      { id: 'e2', name: 'Food Bank Shift', requiredSkills: ['Cooking', 'Teamwork'] },
-      { id: 'e3', name: 'Community Meeting', requiredSkills: ['Communication'] },
-    ]);
+    fetchVolunteers();
   }, []);
 
-  // when a volunteer is selected, only shows events that match their skills
-  const handleVolunteerSelect = (e) => {
-    const volunteerId = e.target.value;
-    setSelectedVolunteer(volunteerId);
-    const volunteer = volunteers.find((v) => v.id === volunteerId);
-    if (volunteer) {
-      const matches = events.filter((event) =>
-        event.requiredSkills.some((skill) => volunteer.skills.includes(skill))
-      );
-      setFilteredEvents(matches);
-    } else {
-      setFilteredEvents([]);
-    }
+  //when volunteer is selected, fetch their matched events
+  const handleVolunteerSelect = async (e) => {
+    const userId = e.target.value;
+    setSelectedVolunteer(userId);
+    setMessage('');
     setSelectedEvent('');
+
+    if (!userId) {
+      setMatchedEvents([]);
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://localhost:5000/api/matches/users/${userId}/matched-events`);
+      const data = await res.json();
+      setMatchedEvents(data[0]?.matches || []);
+      console.log("Fetched matched events:", data);
+    } catch (err) {
+      console.error("Failed to fetch matched events", err);
+      setMatchedEvents([]);
+    }
   };
 
-  const handleSubmit = (e) => {
+  // When the admin assigns the volunteer
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedVolunteer || !selectedEvent) {
       setMessage("Please select both volunteer and event");
       return;
     }
-    const volunteerName = volunteers.find((v) => v.id === selectedVolunteer)?.name;
-    const eventname = events.find((e) => e.id === selectedEvent)?.name;
-    setMessage(`${volunteerName} successfully matched to ${eventname}`);
-    setSelectedEvent('');
-    setSelectedVolunteer('');
-    setFilteredEvents([]);
+
+    try {
+      await fetch(`http://localhost:5000/api/matches/users/${selectedVolunteer}/events/${selectedEvent}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "Attending" }),
+      });
+
+      const volunteername = volunteers.find((v) => v.user_id === parseInt(selectedVolunteer))?.full_name;
+      const eventname = matchedEvents.find((e) => e.id === parseInt(selectedEvent))?.eventname;
+
+      setMessage(`${volunteername} successfully matched to ${eventname}`);
+      setSelectedEvent('');
+    } catch (err) {
+      console.error("Failed to update status", err);
+      setMessage("Error assigning volunteer to event");
+    }
   };
 
   return (
@@ -65,25 +83,25 @@ const VolunteerMatchingForm = () => {
           <select value={selectedVolunteer} onChange={handleVolunteerSelect} required>
             <option value="">-- Choose Volunteer --</option>
             {volunteers.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.name} ({v.skills.join(", ")})
+              <option key={v.user_id} value={v.user_id}>
+                {v.full_name}
               </option>
             ))}
           </select>
 
-          <br></br>
+          <br />
 
           <label>Select Matching Event:</label>
           <select
             value={selectedEvent}
             onChange={(e) => setSelectedEvent(e.target.value)}
             required
-            disabled={filteredEvents.length === 0}
+            disabled={matchedEvents.length === 0}
           >
             <option value="">-- Choose Event --</option>
-            {filteredEvents.map((e) => (
+            {matchedEvents.map((e) => (
               <option key={e.id} value={e.id}>
-                {e.name} (Needs: {e.requiredSkills.join(", ")})
+                {e.eventname} (Needs: {e.skills?.join(", ")})
               </option>
             ))}
           </select>
@@ -97,3 +115,4 @@ const VolunteerMatchingForm = () => {
 };
 
 export default VolunteerMatchingForm;
+

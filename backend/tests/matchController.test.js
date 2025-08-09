@@ -1,272 +1,276 @@
-// const mockDb = require('../database/db');
+// const db = require('../database/db');
 
-// jest.mock('../database/db')
-
-
-// const {
-//   matchUserToEvents,
-//   getMatchesForUser,
-//   updateEventStatus
-// } = require('../controllers/matchController');
-
-// //matchUserToEvents
-// describe('matchUserToEvents', () => {
-//   it('should return true when date, skills, and location match', () => {
-//     const volunteer = {
-//       date: '2025-08-05,2025-08-06',
-//       skills: 'first aid,teaching',
-//       city: 'Austin',
-//       state: 'TX'
-//     };
-//     const event = {
-//       date: '2025-08-06',
-//       skills: 'teaching',
-//       location: 'Austin, TX'
-//     };
-
-//     const result = matchUserToEvents(volunteer, event);
-//     expect(result).toBe(true);
-//   });
-
-//   it('should return false when location does not match', () => {
-//     const volunteer = {
-//       date: '2025-08-06',
-//       skills: 'teaching',
-//       city: 'Dallas',
-//       state: 'TX'
-//     };
-//     const event = {
-//       date: '2025-08-06',
-//       skills: 'teaching',
-//       location: 'Austin, TX'
-//     };
-
-//     const result = matchUserToEvents(volunteer, event);
-//     expect(result).toBe(false);
-//   });
+// // Mock matchController AFTER mocking db
+// jest.mock('../database/db');
+// jest.mock('../controllers/matchController', () => {
+//   const actualController = jest.requireActual('../controllers/matchController');
+//   return {
+//     ...actualController,
+//     matchUserToEvents: jest.fn()
+//   };
 // });
 
-// //GetmatchesForUsers
-// describe('getMatchesForUser', () => {
-//   it('should return matches for the user', async () => {
-//     const req = { params: { userId: '1' } };
-//     const res = {
-//       json: jest.fn(),
-//       status: jest.fn().mockReturnThis()
-//     };
+// const matchController = require('../controllers/matchController');
 
-//     const fakeVolunteer = {
-//       user_id: 1,
-//       full_name: 'Jane Doe',
-//       date: '2025-08-06',
-//       skills: 'teaching',
-//       city: 'Austin',
-//       state: 'TX'
-//     };
-//     const fakeEvent = {
-//       date: '2025-08-06',
-//       skills: 'teaching',
-//       location: 'Austin, TX'
-//     };
-
-//     mockDb.query
-//       .mockResolvedValueOnce({ rows: [fakeVolunteer] }) //for userprofile
-//       .mockResolvedValueOnce({ rows: [fakeEvent] }); //for eventdetails
-
-//     await getMatchesForUser(req, res);
-
-//     expect(res.json).toHaveBeenCalledWith([
-//       { volunteer: 'Jane Doe', matches: [fakeEvent] }
-//     ]);
+// describe('matchController', () => {
+//   beforeEach(() => {
+//     jest.clearAllMocks(); // resets call counts & mockResolvedValueOnce chains
 //   });
 
-//   it('should return 404 when volunteer not found', async () => {
-//     const req = { params: { userId: '' } };
-//     const res = {
-//       json: jest.fn(),
-//       status: jest.fn().mockReturnThis()
-//     };
+//   describe('getAllUsers', () => {
+//     it('should return all users from userprofile', async () => {
+//       const req = {};
+//       const res = {
+//         json: jest.fn(),
+//         status: jest.fn().mockReturnThis()
+//       };
 
-//     mockDb.query.mockResolvedValueOnce({ rows: [{ full_name: "Test User", skills: ['Cooking'], preferences: 'Outdoor' }] });
+//       const fakeUsers = [
+//         { user_id: 1, full_name: 'Jane Doe', skills: 'Teaching' },
+//         { user_id: 2, full_name: 'John Smith', skills: 'Cleaning' }
+//       ];
 
-//     await getMatchesForUser(req, res);
+//       db.query.mockResolvedValueOnce({ rows: fakeUsers });
 
-//     expect(res.status).toHaveBeenCalledWith(404);
-//     expect(res.json).toHaveBeenCalledWith({ error: 'Volunteer not found' });
-//   });
-// });
+//       await matchController.getAllUsers(req, res);
 
-// //updateEventStatus
-// describe('updateEventStatus', () => {
-//   it('should update the status of an event', async () => {
-//     const req = {
-//       params: { eventId: '5' },
-//       body: { status: 'Attended' }
-//     };
-//     const res = {
-//       json: jest.fn(),
-//       status: jest.fn().mockReturnThis()
-//     };
+//       expect(db.query).toHaveBeenCalledWith(`
+//       SELECT user_id, full_name, skills 
+//       FROM userprofile
+//     `);
+//       expect(res.json).toHaveBeenCalledWith(fakeUsers);
+//     });
 
-//     mockDb.query.mockResolvedValueOnce(); //no return needed for update
+//     it('should return 500 on database error', async () => {
+//       const req = {};
+//       const res = {
+//         json: jest.fn(),
+//         status: jest.fn().mockReturnThis()
+//       };
 
-//     await updateEventStatus(req, res);
+//       db.query.mockRejectedValueOnce(new Error('DB error'));
 
-//     expect(mockDb.query).toHaveBeenCalledWith(
-//       'UPDATE eventdetails SET status = $1 WHERE id = $2',
-//       ['Attended', '5']
-//     );
-//     expect(res.json).toHaveBeenCalledWith({ message: 'Status updated successfully' });
-//   });
+//       await matchController.getAllUsers(req, res);
 
-//   it('should return 500 on error', async () => {
-//     const req = { params: { eventId: '5' }, body: { status: 'Attended' } };
-//     const res = {
-//       json: jest.fn(),
-//       status: jest.fn().mockReturnThis()
-//     };
-
-//     mockDb.query.mockRejectedValueOnce(new Error('DB error'));
-
-//     await updateEventStatus(req, res);
-
-//     expect(res.status).toHaveBeenCalledWith(500);
-//     expect(res.json).toHaveBeenCalledWith({
-//       error: 'Server error while updating status'
+//       expect(res.status).toHaveBeenCalledWith(500);
+//       expect(res.json).toHaveBeenCalledWith({ error: 'Server error' });
 //     });
 //   });
 
-//     it('should return empty matches if no event matches volunteer', async () => {
-//     const req = { params: { userId: '1' } };
-//     const res = {
-//       json: jest.fn(),
-//       status: jest.fn().mockReturnThis()
-//     };
+//   describe('getMatchesForUser', () => {
+//     let req, res;
 
-//     const fakeVolunteer = {
-//       user_id: 1,
-//       full_name: 'Jane Doe',
-//       date: '2025-08-06',
-//       skills: 'teaching',
-//       city: 'Austin',
-//       state: 'TX'
-//     };
-//     const fakeEvent = {
-//       date: '2025-08-07', // mismatch
-//       skills: 'first aid', // mismatch
-//       location: 'Dallas, TX' // mismatch
-//     };
+//     beforeEach(() => {
+//       req = { params: { userId: '1' } };
+//       res = {
+//         status: jest.fn().mockReturnThis(),
+//         json: jest.fn(),
+//       };
+//     });
 
-//     mockDb.query
-//       .mockResolvedValueOnce({ rows: [fakeVolunteer] })
-//       .mockResolvedValueOnce({ rows: [fakeEvent] });
+//     it('should return 404 if volunteer not found', async () => {
+//       db.query
+//         .mockResolvedValueOnce({ rows: [] }) // volunteer not found
+//         .mockResolvedValueOnce({ rows: [] });
 
-//     await getMatchesForUser(req, res);
+//       await matchController.getMatchesForUser(req, res);
 
-//     expect(res.json).toHaveBeenCalledWith([
-//       { volunteer: 'Jane Doe', matches: [] }
-//     ]);
+//       expect(res.status).toHaveBeenCalledWith(404);
+//       expect(res.json).toHaveBeenCalledWith({ error: 'Volunteer not found' });
+//     });
+
+//     it('should return matched events with status', async () => {
+//       db.query
+//         // 1: volunteer found
+//         .mockResolvedValueOnce({ rows: [{ user_id: 1, full_name: 'Jane Doe', skills: ['Cleaning'] }] })
+//         // 2: events list
+//         .mockResolvedValueOnce({
+//           rows: [
+//             { id: 10, eventname: 'Beach Cleanup', skills: ['Cleaning'] },
+//             { id: 20, eventname: 'Food Drive', skills: ['Cooking'] }
+//           ]
+//         })
+//         // 3: insert into UserEvents
+//         .mockResolvedValueOnce({ rows: [{user_id: 1, event_id: 10, status:'Attending' }] })
+//         // 4: select status
+//         .mockResolvedValueOnce({ rows: [{ status: 'Select' }] });
+
+//       matchController.matchUserToEvents.mockImplementation((volunteer, event) => event.id === 10);
+
+//       await matchController.getMatchesForUser(req, res);
+
+//       expect(matchController.matchUserToEvents).toHaveBeenCalledTimes(2);
+//       expect(res.json).toHaveBeenCalledWith([
+//         {
+//           volunteer: 'Jane Doe',
+//           matches: [
+//             { id: 10, eventname: 'Beach Cleanup', skills: ['Cleaning'], userStatus: 'Select' }
+//           ]
+//         }
+//       ]);
+//     });
+
+//       //updateEventStatus
+//   describe('updateEventStatus', () => {
+//     it('should update the status of an event', async () => {
+//       const req = {
+//         params: { userId: '1', eventId: '5' },
+//         body: { status: 'Attended' }
+//       };
+//       const res = {
+//         json: jest.fn(),
+//         status: jest.fn().mockReturnThis()
+//       };
+
+//       db.query.mockResolvedValueOnce(); //no return needed for update
+
+//       await matchController.updateEventStatus(req, res);
+
+//       expect(db.query).toHaveBeenCalledWith(
+//         'UPDATE userevents SET status = $1 WHERE user_id = $2 AND event_id = $3',
+//         ['Attended', '1', '5']
+//       );
+//       expect(res.json).toHaveBeenCalledWith({ message: 'Status updated successfully' });
+//     });
 //   });
-//     it('should return 500 if database query fails', async () => {
-//     const req = { params: { userId: 'fakeVolunteer' } };
-//     const res = {
-//       json: jest.fn(),
-//       status: jest.fn().mockReturnThis()
-//     };
 
-//     mockDb.query.mockRejectedValueOnce(new Error('Database error'));
+//     it('should handle DB errors', async () => {
+//       db.query.mockRejectedValueOnce(new Error('DB failed'));
 
-//     await getMatchesForUser(req, res);
+//       await matchController.getMatchesForUser(req, res);
 
-//     expect(res.status).toHaveBeenCalledWith(500);
-//     expect(res.json).toHaveBeenCalledWith({
-//       error: 'Server error while matching user'
+//       expect(res.status).toHaveBeenCalledWith(500);
+//       expect(res.json).toHaveBeenCalledWith({ error: 'Server error while matching user' });
 //     });
 //   });
 // });
 
-const matchController = require('../controllers/matchController');
+// test/matchController.test.js
 const db = require('../database/db');
+
+// Mock db first
 jest.mock('../database/db');
 
-describe('getMatchesForUser', () => {
-  it('should return matched events for a user', async () => {
-    const req = { params: { userId: 1 } };
-    const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
+describe('matchController', () => {
+  let matchController;
 
-    const fakeVolunteer = {
-      id: 1,
-      full_name: 'Jane Doe',
-      skills: 'teaching',
-      city: 'Houston',
-      state: 'TX',
-      date: ['2025-08-10'],
-    };
-
-    const fakeEvent = {
-      id: 101,
-      skills: 'teaching',
-      location: 'Houston, TX',
-      date: ['2025-08-10'],
-    };
-
-    //Mock DB responses
-    db.query
-      .mockResolvedValueOnce({ rows: [fakeVolunteer] }) // userprofile
-      .mockResolvedValueOnce({ rows: [fakeEvent] });    // eventdetails
-
-    await matchController.getMatchesForUser(req, res);
-
-
-    //Check response format
-    expect(res.json).toHaveBeenCalledWith([
-      {
-        volunteer: 'Jane Doe',
-        matches: [fakeEvent],
-      },
-    ]);
-  });
-});
-
-it('should return 404 when volunteer not found', async () => {
-    const req = { params: { userId: 2} };
-    const res = {
-      json: jest.fn(),
-      status: jest.fn().mockReturnThis()
-    };
-
-    db.query.mockResolvedValueOnce({ rows: []});
-    db.query.mockResolvedValueOnce({ rows: [] });
-
-    await matchController.getMatchesForUser(req, res);
-
-    expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ error: 'Volunteer not found' });
+  beforeEach(() => {
+    jest.clearAllMocks();
+    // Require controller fresh each time so mocks are applied
+    matchController = require('../controllers/matchController');
   });
 
-//updateEventStatus
-describe('updateEventStatus', () => {
-  it('should update the status of an event', async () => {
-    const req = {
-      params: { userId: '1', eventId: '5' },
-      body: { status: 'Attended' }
-    };
-    const res = {
-      json: jest.fn(),
-      status: jest.fn().mockReturnThis()
-    };
+  describe('getAllUsers', () => {
+    it('should return all users from userprofile', async () => {
+      const req = {};
+      const res = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
-    db.query.mockResolvedValueOnce(); //no return needed for update
+      const fakeUsers = [
+        { user_id: 1, full_name: 'Jane Doe', skills: 'Teaching' },
+        { user_id: 2, full_name: 'John Smith', skills: 'Cleaning' }
+      ];
 
-    await matchController.updateEventStatus(req, res);
+      db.query.mockResolvedValueOnce({ rows: fakeUsers });
 
-    expect(db.query).toHaveBeenCalledWith(
-      'UPDATE userevents SET status = $1 WHERE user_id = $2 AND event_id = $3',
-      ['Attended', '1', '5']
-    );
-    expect(res.json).toHaveBeenCalledWith({ message: 'Status updated successfully' });
+      await matchController.getAllUsers(req, res);
+
+      expect(db.query).toHaveBeenCalledWith(`
+      SELECT user_id, full_name, skills 
+      FROM userprofile
+    `);
+      expect(res.json).toHaveBeenCalledWith(fakeUsers);
+    });
+
+    it('should return 500 on database error', async () => {
+      const req = {};
+      const res = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+      db.query.mockRejectedValueOnce(new Error('DB error'));
+
+      await matchController.getAllUsers(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ error: 'Server error' });
+    });
+  });
+
+  describe('getMatchesForUser', () => {
+    let req, res;
+
+    beforeEach(() => {
+      req = { params: { userId: '1' } };
+      res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    });
+
+    it('should return 404 if volunteer not found', async () => {
+      db.query
+        .mockResolvedValueOnce({ rows: [] }) // volunteer not found
+        .mockResolvedValueOnce({ rows: [] });
+
+      await matchController.getMatchesForUser(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ error: 'Volunteer not found' });
+    });
+
+    it('should return matched events with status', async () => {
+      // Spy on matchUserToEvents so we control matching behavior
+      jest.spyOn(matchController, 'matchUserToEvents').mockImplementation(
+        (volunteer, event) => event.id === 10
+      );
+
+      db.query
+        // 1: volunteer found
+        .mockResolvedValueOnce({ rows: [{ user_id: 1, full_name: 'Jane Doe', skills: ['Cleaning'] }] })
+        // 2: events list
+        .mockResolvedValueOnce({
+          rows: [
+            { id: 10, eventname: 'Beach Cleanup', skills: ['Cleaning'] },
+            { id: 20, eventname: 'Food Drive', skills: ['Cooking'] }
+          ]
+        })
+        // 3: insert into UserEvents
+        .mockResolvedValueOnce({})
+        // 4: select status
+        .mockResolvedValueOnce({ rows: [{ status: 'Select' }] });
+
+      await matchController.getMatchesForUser(req, res);
+
+      expect(matchController.matchUserToEvents).toHaveBeenCalledTimes(2);
+      expect(res.json).toHaveBeenCalledWith([
+        {
+          volunteer: 'Jane Doe',
+          matches: [
+            { id: 10, eventname: 'Beach Cleanup', skills: ['Cleaning'], userStatus: 'Select' }
+          ]
+        }
+      ]);
+    });
+
+    it('should handle DB errors', async () => {
+      db.query.mockRejectedValueOnce(new Error('DB failed'));
+
+      await matchController.getMatchesForUser(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ error: 'Server error while matching user' });
+    });
+  });
+
+  describe('updateEventStatus', () => {
+    it('should update the status of an event', async () => {
+      const req = { params: { userId: '1', eventId: '5' }, body: { status: 'Attended' } };
+      const res = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+      db.query.mockResolvedValueOnce();
+
+      await matchController.updateEventStatus(req, res);
+
+      expect(db.query).toHaveBeenCalledWith(
+        'UPDATE userevents SET status = $1 WHERE user_id = $2 AND event_id = $3',
+        ['Attended', '1', '5']
+      );
+      expect(res.json).toHaveBeenCalledWith({ message: 'Status updated successfully' });
+    });
   });
 });
