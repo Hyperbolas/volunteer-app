@@ -6,6 +6,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env.docker') });
+
 // Connect auth routes
 const authRoutes = require("./routes/auth");
 app.use("/api", authRoutes);
