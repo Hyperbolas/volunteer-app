@@ -1,6 +1,33 @@
 # Volunteer App
 
-Getting Started
+## Getting Started
+
+## Docker Instructions
+Install docker from https://www.docker.com/
+Docker will setup frontend+backend+database
+
+<pre>
+  # 1. Copy the example enviroment file 
+  cp .env.example .env.docker
+</pre>
+<pre>
+  # 2. Change the username and password in .env.docker to your own
+  POSTGRES_USER
+  POSTGRES_PASSWORD
+  PGUSER, PGPASSWORD — chnage to same creds as above if you want
+</pre>
+<pre>
+  # 3. Start the app 
+  docker-compose --env-file .env.docker up --build
+
+  # 4. Navigate to web app
+  http://localhost:3000/
+</pre>
+
+----
+For just Front end and backend, do the following: 
+
+## React Start
 
 Download Node.js and install from: https://nodejs.org
 
@@ -9,12 +36,20 @@ Confirm it's working:
 'npm -v'
 
 Open cmd and execute the following:
-
-1. npm install
-2. cd volunteer-app
-3. npm start
+<pre>
+  npm install
+  cd frontend
+  npm start
+</pre>
 
 - The server should start and page should appear automatically or open link manually ie. http://localhost:3000/
+## Nodejs Start 
+<pre> 
+  cd backend
+  npm run dev
+</pre>
+
+
 
 ---
 
@@ -67,6 +102,21 @@ Front end must include the following components:
 
 ---
 
+Submit a Word/PDF document with your answers.
+Use GitHub for your group collaboration and code.
+Answer these questions:
+
+- GitHub Repository Link (1 point)
+  Provide the link to your GitHub repository for TAs to view the code.
+- Design and Development Methodology (1 point)
+  Discuss if your design and development methodology has changed since Assignment 1 and why.
+- Front-End Technologies and Responsibilities (2 points)
+  List what front-end technologies you are using and why. List who is responsible for doing what in your group.
+  -Screenshots of Your Front End (5 points)
+  Provide screenshots of your front end, each page.
+
+---
+
 ## Assignment 3: Back-End
 
 Back end must include the following components/modules:
@@ -78,7 +128,7 @@ Back end must include the following components/modules:
 - Notification Module: Logic to send notifications to volunteers for event assignments, updates, and reminders.
 - Volunteer History Module: Track and display volunteer participation history.
   
-# Important Deliverables
+## Important Deliverables
 - Validations: Ensure validations are in place for required fields, field types, and field lengths in the backend code.
 
 - Unit Tests: All backend code should be covered by unit tests. Code coverage should be greater than 80%. Research how to run the code coverage reports. Each IDE has plugins to generate reports. Here are a few pointers: Stackify Code Coverage ToolsLinks to an external site.
@@ -86,3 +136,23 @@ Back end must include the following components/modules:
 - Integration with Front End: All front-end components should be connected to the back end. Form data should be populated from the back end. The back end should receive data from the front end, validate it, and prepare it to persist to the database.
 
 - No Database Implementation: We are not implementing the database yet. For this assignment, you can hard code the values.
+
+---
+
+## Assignment 4: Database Implementation
+
+You can use RDBMS or NoSQL database.
+
+Database must include the following tables/documents:
+
+- UserCredentials: (ID & password), password should be encrypted.
+- UserProfile: Stores user details like full name, address, city, state, zipcode, skills, preferences, and availability.
+- EventDetails: Stores details of the events such as event name, description, location, required skills, urgency, and event date.
+- VolunteerHistory: Tracks volunteer participation in events.
+- States: Stores state codes and names (if required).
+  
+## Important Deliverables
+- Validations: Ensure validations are in place for required fields, field types, and field lengths.
+- Data Retrieval and Display: Backend should retrieve data from the database and display it to the front end.
+- Data Persistence: Form data should be populated from the backend. The backend should receive data from the front end, validate it, and persist it to the database.
+- Unit Tests: Any new code added should be covered by unit tests. Keep code coverage above 80%.
